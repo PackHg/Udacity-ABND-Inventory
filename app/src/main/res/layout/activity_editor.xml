@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/activity_margin"
+    tools:context=".EditorActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Input fields -->
+        <!-- Product picture -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/EditorTextViewStyle"
+                android:text="@string/editor_picture" />
+
+            <ImageView
+                android:id="@+id/editor_picture"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:src="@mipmap/ic_launcher" />
+        </LinearLayout>
+
+        <!-- Product name -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/EditorTextViewStyle"
+                android:text="@string/editor_name" />
+
+            <EditText
+                android:id="@+id/editor_name"
+                style="@style/EditorFieldStyle"
+                android:hint="@string/editor_product_name"
+                android:inputType="textCapWords" />
+        </LinearLayout>
+
+        <!-- Product quantity availabe -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/EditorTextViewStyle"
+                android:text="@string/editor_quantity" />
+
+            <EditText
+                android:id="@+id/editor_quantity"
+                style="@style/EditorFieldStyle"
+                android:hint="@string/editor_quantity_available"
+                android:inputType="number" />
+        </LinearLayout>
+
+        <!-- Product price -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/EditorTextViewStyle"
+                android:text="@string/editor_price" />
+
+            <EditText
+                android:id="@+id/editor_price"
+                style="@style/EditorFieldStyle"
+                android:hint="@string/editor_product_price"
+                android:inputType="number" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/editor_sell_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_above="@+id/editor_order_button"
+        android:layout_marginBottom="@dimen/activity_margin"
+        android:layout_marginRight="@dimen/activity_margin"
+        android:layout_marginEnd="@dimen/activity_margin"
+        android:src="@drawable/ic_ecommerce_cash_register"
+        android:tint="@android:color/white"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/editor_order_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_above="@+id/editor_add_photo_button"
+        android:layout_marginBottom="@dimen/activity_margin"
+        android:layout_marginRight="@dimen/activity_margin"
+        android:layout_marginEnd="@dimen/activity_margin"
+        android:src="@drawable/ic_finance_purchase_order"
+        android:tint="@android:color/white"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/editor_add_photo_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_above="@+id/editor_minus_button"
+        android:layout_marginBottom="@dimen/activity_margin"
+        android:layout_marginRight="@dimen/activity_margin"
+        android:layout_marginEnd="@dimen/activity_margin"
+        android:src="@drawable/ic_add_a_photo_black_48dp"
+        android:tint="@android:color/white"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/editor_minus_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_above="@+id/editor_plus_button"
+        android:layout_marginBottom="@dimen/activity_margin"
+        android:layout_marginRight="@dimen/activity_margin"
+        android:layout_marginEnd="@dimen/activity_margin"
+        android:src="@drawable/ic_minus_circle_black_48dp"
+        android:tint="@android:color/white"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/editor_plus_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="@dimen/activity_margin"
+        android:layout_marginEnd="@dimen/activity_margin"
+        android:layout_marginBottom="4dp"
+        android:src="@drawable/ic_plus_circle_black_48dp"
+        android:tint="@android:color/white"/>
+</RelativeLayout>
