@@ -34,6 +34,7 @@ public class ProductDbHelper extends SQLiteOpenHelper {
     private static final String BLOB = " BLOB";
     private static final String PRIMARY_KEY = " PRIMARY KEY";
     private static final String AUTOINCREMENT = " AUTOINCREMENT";
+    private static final String NULL = " NULL";
     private static final String NOT_NULL = " NOT NULL";
     private static final String DEFAULT = " DEFAULT ";
     private static final String COMMA_SEP = ", ";
@@ -45,8 +46,7 @@ public class ProductDbHelper extends SQLiteOpenHelper {
                     ProductEntry.COLUMN_PRODUCT_NAME + TEXT + NOT_NULL + COMMA_SEP +
                     ProductEntry.COLUMN_PRODUCT_QUANTITY + INTEGER + NOT_NULL + DEFAULT + "0" + COMMA_SEP +
                     ProductEntry.COLUMN_PRODUCT_PRICE + REAL + NOT_NULL + DEFAULT + "0" + COMMA_SEP +
-                    ProductEntry.COLUMN_PRODUCT_IMAGE + BLOB +
-                    ");";
+                    ProductEntry.COLUMN_PRODUCT_IMAGE + BLOB + DEFAULT + NULL + ");";
 
     /** String constant for the SQL statement to delete the products table */
     private static final String SQL_DELETE_ENTRIES = DROP_TABLE + IF_EXISTS + ProductEntry.TABLE_NAME;

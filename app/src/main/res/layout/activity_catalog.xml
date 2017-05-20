@@ -8,9 +8,8 @@
 
     <ListView
         android:id="@+id/catalog_list_view"
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/list_item_height"
+        android:layout_height="match_parent"
         android:divider="@android:color/darker_gray"
         android:dividerHeight="1dp" />
 
@@ -19,7 +18,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        tools:text="Empty view"/>
+        android:text="@string/catalog_empty_view_text" />
 
     <!-- TODO: Change to bigger icon with white "+" on red circle  -->
     <android.support.design.widget.FloatingActionButton
