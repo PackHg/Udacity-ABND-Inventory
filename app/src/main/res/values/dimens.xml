@@ -13,6 +13,11 @@
     <!-- Common margin value used throughout the app -->
     <dimen name="activity_margin">16dp</dimen>
 
-    <dimen name="list_item_height">495dp</dimen>
+    <!-- Height of each list item (initially 88dp) -->
+    <dimen name="list_item_height">@dimen/list_item_image_height</dimen>
+
+    <!-- Height Width of the image in a list item -->
+    <dimen name="list_item_image_width">110dp</dimen>
+    <dimen name="list_item_image_height">110dp</dimen>
 </resources>
 

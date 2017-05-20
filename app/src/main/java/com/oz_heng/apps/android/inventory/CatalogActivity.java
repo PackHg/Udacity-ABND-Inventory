@@ -22,6 +22,7 @@ public class CatalogActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
     }
+
+    // TODO: To complete
 }
