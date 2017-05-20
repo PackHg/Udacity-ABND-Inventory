@@ -101,8 +101,6 @@ public class CatalogActivity extends AppCompatActivity
         } else {
             Toast.makeText(this, getString(R.string.save_product_failed), Toast.LENGTH_LONG).show();
         }
-
-        Log.v(LOG_TAG, "insertDummyPet() is called. id = " + id);
     }
 
     @Override

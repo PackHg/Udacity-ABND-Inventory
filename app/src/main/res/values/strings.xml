@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Inventory</string>
 
+    <string name="quantity">Quantity:</string>
+    <string name="price">Price:</string>
+
     <string name="save_product_successful_with_id">Product saved with Id:&#160;</string>
     <string name="save_product_failed">Error with saving product</string>
 

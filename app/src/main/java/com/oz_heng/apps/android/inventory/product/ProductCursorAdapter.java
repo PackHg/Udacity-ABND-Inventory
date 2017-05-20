@@ -76,14 +76,14 @@ public class ProductCursorAdapter extends CursorAdapter {
         // Display the product data
 
         // Get Blob image, convert it to Bitmap and display
-//        byte[] imabeBytes = cursor.getBlob(imageCI);
-//        if (imabeBytes != null) {
-//            Bitmap bitmap = BitmapFactory.decodeByteArray(imabeBytes, 0, imabeBytes.length);
-//            imageView.setImageBitmap( bitmap);
-//        }
+        byte[] imabeBytes = cursor.getBlob(imageCI);
+        if (imabeBytes != null) {
+            Bitmap bitmap = BitmapFactory.decodeByteArray(imabeBytes, 0, imabeBytes.length);
+            imageView.setImageBitmap( bitmap);
+        }
 
         nameTextView.setText(name);
         quantityTextView.setText(String.valueOf(quantity));
-        priceTextView.setText(String.format("%.2f%n", price));
+        priceTextView.setText(String.format("$%.2f%n", price));
     }
 }
