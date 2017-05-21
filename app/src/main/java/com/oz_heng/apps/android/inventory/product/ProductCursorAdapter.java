@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.oz_heng.apps.android.inventory.R;
 import com.oz_heng.apps.android.inventory.product.ProductContract.ProductEntry;
+import com.oz_heng.apps.android.inventory.helper.Utils;
 
 /**
  * Created by Pack Heng on 12/05/17
@@ -77,9 +78,9 @@ public class ProductCursorAdapter extends CursorAdapter {
 
         // Get Blob image, convert it to Bitmap and display
         byte[] imabeBytes = cursor.getBlob(imageCI);
-        if (imabeBytes != null) {
-            Bitmap bitmap = BitmapFactory.decodeByteArray(imabeBytes, 0, imabeBytes.length);
-            imageView.setImageBitmap( bitmap);
+        Bitmap bitmap = Utils.byteArrayToBitmap(imabeBytes);
+        if (bitmap != null) {
+            imageView.setImageBitmap(bitmap);
         }
 
         nameTextView.setText(name);

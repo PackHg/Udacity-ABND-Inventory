@@ -7,20 +7,21 @@ import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.support.design.widget.FloatingActionButton;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.oz_heng.apps.android.inventory.product.ProductContract.ProductEntry;
 import com.oz_heng.apps.android.inventory.product.ProductCursorAdapter;
+import com.oz_heng.apps.android.inventory.helper.Utils;
 
 public class CatalogActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -73,10 +74,11 @@ public class CatalogActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.catalog_action_insert_dummy_pet:
-                insertDummyPet();
+                insertDummyProduct1();
                 return true;
             case R.id.catalog_action_delete_all_pets:
                 // Todo: delete all pet entries
+                insertDummyProduct2();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -86,12 +88,37 @@ public class CatalogActivity extends AppCompatActivity
      * Helper method to insert hardcoded product data into the database. For debugging
      * purposes only.
      */
-    private void insertDummyPet() {
+    private void insertDummyProduct1() {
 
         ContentValues values = new ContentValues();
-        values.put(ProductEntry.COLUMN_PRODUCT_NAME, "Banana");
+        values.put(ProductEntry.COLUMN_PRODUCT_NAME, "Android 1");
         values.put(ProductEntry.COLUMN_PRODUCT_QUANTITY, 10);
         values.put(ProductEntry.COLUMN_PRODUCT_PRICE, 1.0);
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
+        values.put(ProductEntry.COLUMN_PRODUCT_IMAGE, Utils.bitmapToByteArray(bitmap));
+
+        Uri uri = getContentResolver().insert(ProductEntry.CONTENT_URI, values);
+        long id = ContentUris.parseId(uri);
+
+        if (uri != null) {
+            Toast.makeText(this, getString(R.string.save_product_successful_with_id) + id, Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(this, getString(R.string.save_product_failed), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    /**
+     * Helper method to insert hardcoded product data into the database. For debugging
+     * purposes only.
+     */
+    private void insertDummyProduct2() {
+
+        ContentValues values = new ContentValues();
+        values.put(ProductEntry.COLUMN_PRODUCT_NAME, "Android 2");
+        values.put(ProductEntry.COLUMN_PRODUCT_QUANTITY, 20);
+        values.put(ProductEntry.COLUMN_PRODUCT_PRICE, 2.0);
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher_round);
+        values.put(ProductEntry.COLUMN_PRODUCT_IMAGE, Utils.bitmapToByteArray(bitmap));
 
         Uri uri = getContentResolver().insert(ProductEntry.CONTENT_URI, values);
         long id = ContentUris.parseId(uri);
