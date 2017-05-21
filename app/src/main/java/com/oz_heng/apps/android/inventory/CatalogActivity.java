@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -58,6 +59,26 @@ public class CatalogActivity extends AppCompatActivity
         /* Find and set empty view on the ListView, so that it only shows when the list has 0 items */
         View emptyView = findViewById(R.id.catalog_empty_view);
         productlistView.setEmptyView(emptyView);
+
+        /* Setup the list item click listener*/
+        productlistView.setOnItemClickListener(
+          new AdapterView.OnItemClickListener() {
+              @Override
+              public void onItemClick(AdapterView<?> adapterView, View view, int position,
+                                      long id) {
+                  Uri uri = ContentUris.withAppendedId(ProductEntry.CONTENT_URI, id);
+
+                  Toast.makeText(CatalogActivity.this, "Id: " + id + "\n" +
+                          "Uri: " + uri.toString(), Toast.LENGTH_LONG).show();
+
+                  /* Start {@link EditorActivity} with the URI as the data field of
+                    the intent */
+                  Intent intent = new Intent(CatalogActivity.this, EditorActivity.class);
+                  intent.setData(uri);
+                  startActivity(intent);
+              }
+          }
+        );
 
         // Prepare the loader. Either re-connect with an existing one,
         // or start a new one.
