@@ -13,13 +13,15 @@
     <string name="catalog_empty_view_text">No product in the database</string>
 
     <!-- Editor String values-->
-    <string name="editor_name">Name</string>
+    <string name="editor_title_edit">Edit a product</string>
+    <string name="editor_title_add">Add a product</string>
+    <string name="editor_name">Name:</string>
     <string name="editor_product_name">Product name</string>
-    <string name="editor_quantity">Quantity</string>
-    <string name="editor_quantity_available">Quanity available</string>
-    <string name="editor_price">Price</string>
+    <string name="editor_quantity">Quantity:</string>
+    <string name="editor_quantity_available">Quantity available</string>
+    <string name="editor_price">Price:</string>
     <string name="editor_product_price">Product price</string>
-    <string name="editor_picture">Picture</string>
-    <string name="editot_picture_unvailable">No picture</string>
+    <string name="editor_picture">Picture:"</string>
+    <string name="editor_picture_unvailable">No picture</string>
 
 </resources>

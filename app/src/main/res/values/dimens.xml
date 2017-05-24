@@ -16,8 +16,13 @@
     <!-- Height of each list item (initially 88dp) -->
     <dimen name="list_item_height">@dimen/list_item_image_height</dimen>
 
-    <!-- Height Width of the image in a list item -->
+    <!-- Width and height of the image in a list item -->
     <dimen name="list_item_image_width">110dp</dimen>
     <dimen name="list_item_image_height">110dp</dimen>
+
+    <!-- Width and height of the image in Editor -->
+    <dimen name="editor_image_width">@dimen/list_item_image_width</dimen>
+    <dimen name="editor_image_height">@dimen/list_item_image_height</dimen>
+
 </resources>
 
