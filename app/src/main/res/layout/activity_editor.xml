@@ -113,7 +113,7 @@
                 android:layout_weight="2"
                 android:layout_height="wrap_content"
                 android:hint="@string/editor_product_price"
-                android:inputType="number" />
+                android:inputType="numberDecimal" />
         </LinearLayout>
     </LinearLayout>
 

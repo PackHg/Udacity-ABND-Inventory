@@ -1,7 +1,9 @@
 package com.oz_heng.apps.android.inventory;
 
 import android.app.LoaderManager;
+import android.content.ContentResolver;
 import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
@@ -10,6 +12,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -24,21 +29,51 @@ import com.oz_heng.apps.android.inventory.product.ProductContract.ProductEntry;
  * pack@oz-heng.com
  */
 
+/* TODO: Is EditorActivity completed?
+*  Done: Add case to add a new product (when user clicks on + button in CatalogActivity
+*  TODO: Validate the data from the user input fields
+*  TODO: Option to the delete the current product
+*  Done: Do we need Menu Option Items for EditorActivity? Yes for saving the product
+*  TODO: Take picture of the product
+*  TODO: Re-arrange the floating action buttons
+*  TODO: Force EditorActivity UI to be with Portrait mode only?
+* */
+
+
+
 public class EditorActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor> {
 
     // Uses existing loader used by CatalogActivity
     private static final int EXISTING_PRODUCT_LOADER = 0;
 
-    /** Content URI for the existing product (null if it's a new product) */
+    // Content URI for the existing product (null if it's a new product)
     private Uri mCurrentProductUri;
 
-    /* The views we'll have to handle */
+    /* EditText fields to enter the product data */
     EditText mNameET;
     EditText mQuantityET;
     EditText mPriceET;
-    ImageView mImageView;
     TextView mNoImageTV;
+
+    // ImageView to display the product image
+    ImageView mImageView;
+
+    /** Boolean flag which will be true if the user updates part of the product form */
+    private boolean mProductHasChanged = false;
+
+    /**
+     * OnTouchListener that listens for any user touches on a View,
+     * implying that they are modifying the view, and we change the
+     * mProducrHasChanged boolean to true.
+     */
+    private View.OnTouchListener mOnTouchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            mProductHasChanged = true;
+            return false;
+        }
+    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,6 +87,8 @@ public class EditorActivity extends AppCompatActivity
          * else edit an existing product */
         if (mCurrentProductUri == null) {
             setTitle(getString(R.string.editor_title_add));
+
+            // TODO: invalidate Delete option
 
         } else {
             setTitle(getString(R.string.editor_title_edit));
@@ -70,6 +107,88 @@ public class EditorActivity extends AppCompatActivity
         mPriceET = (EditText) findViewById(R.id.editor_price);
         mImageView = (ImageView) findViewById(R.id.editor_picture);
         mNoImageTV = (TextView) findViewById(R.id.editor_no_picture_view);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_editor, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.editor_action_save:
+                saveProduct();
+                finish();       // Exits the activity
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Adds a new product or updates an existing product
+     */
+    private void saveProduct() {
+        // Get the user inputs
+        String nameString = mNameET.getText().toString().trim();
+        String quantityString = mQuantityET.getText().toString().trim();
+        String priceString = mPriceET.getText().toString().trim();
+        // TODO: get the image input from the user
+
+        // If all of the inputs are empty, then return without saving.
+        if (nameString.isEmpty() && quantityString.isEmpty() && priceString.isEmpty()) {
+            return;
+        }
+
+        int quantity;
+        if (quantityString.isEmpty()) {
+            quantity = 0;
+        } else {
+            quantity = Integer.parseInt(quantityString);
+        }
+
+        double price = Double.parseDouble(priceString);
+
+        ContentValues values = new ContentValues();
+        values.put(ProductEntry.COLUMN_PRODUCT_NAME, nameString);
+        values.put(ProductEntry.COLUMN_PRODUCT_QUANTITY, quantity);
+        values.put(ProductEntry.COLUMN_PRODUCT_PRICE, price);
+
+        if (mCurrentProductUri == null) {
+            // Add a new product
+            Uri uri = getContentResolver().insert(
+                    ProductEntry.CONTENT_URI,   // The products content URI
+                    values                      // The values to insert
+            );
+
+            long id = ContentUris.parseId(uri);
+            if (uri != null) {
+                Toast.makeText(this, getString(R.string.save_product_successful_with_id),
+                        Toast.LENGTH_LONG).show();
+
+            } else {
+                Toast.makeText(this, getString(R.string.save_product_failed),
+                        Toast.LENGTH_LONG).show();
+            }
+
+        } else {
+            // Update an existing product
+            int rowsUpdated = getContentResolver().update(
+                    mCurrentProductUri, // Content URI of the current product to update
+                    values,             // Values to update
+                    null,               // No selection
+                    null                // No selection agrs
+            );
+            if (rowsUpdated > 0) {
+                Toast.makeText(this, getString(R.string.update_product_successful),
+                        Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, getString(R.string.update_product_failed),
+                        Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
     @Override
@@ -119,7 +238,7 @@ public class EditorActivity extends AppCompatActivity
             // Update the fields
             mNameET.setText(name);
             mQuantityET.setText(String.valueOf(quantity));
-            mPriceET.setText(String.format("$%.2f%n", price));
+            mPriceET.setText(String.format("%.2f%n", price));
             if (image == null || image.length == 0) {
                 mNoImageTV.setVisibility(View.VISIBLE);
                 mImageView.setVisibility(View.INVISIBLE);
@@ -140,5 +259,4 @@ public class EditorActivity extends AppCompatActivity
         mNoImageTV.setVisibility(View.VISIBLE);
     }
 
-    // TODO: Is EditorActivity completed?
 }

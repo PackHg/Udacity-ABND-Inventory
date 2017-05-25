@@ -24,6 +24,10 @@ import com.oz_heng.apps.android.inventory.product.ProductContract.ProductEntry;
 import com.oz_heng.apps.android.inventory.product.ProductCursorAdapter;
 import com.oz_heng.apps.android.inventory.helper.Utils;
 
+/*
+  TODO: Optioon to delete all the products in the database
+ */
+
 public class CatalogActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor> {
 
