@@ -1,7 +1,6 @@
 package com.oz_heng.apps.android.inventory;
 
 import android.app.LoaderManager;
-import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.CursorLoader;
@@ -11,7 +10,9 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -39,10 +40,9 @@ import com.oz_heng.apps.android.inventory.product.ProductContract.ProductEntry;
 *  TODO: Force EditorActivity UI to be with Portrait mode only?
 * */
 
-
-
 public class EditorActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor> {
+    private static final String LOG_TAG = EditorActivity.class.getSimpleName();
 
     // Uses existing loader used by CatalogActivity
     private static final int EXISTING_PRODUCT_LOADER = 0;
@@ -58,6 +58,9 @@ public class EditorActivity extends AppCompatActivity
 
     // ImageView to display the product image
     ImageView mImageView;
+
+    TextView mWarningTextView;
+
 
     /** Boolean flag which will be true if the user updates part of the product form */
     private boolean mProductHasChanged = false;
@@ -102,11 +105,17 @@ public class EditorActivity extends AppCompatActivity
             getLoaderManager().initLoader(EXISTING_PRODUCT_LOADER, null, this);
         }
 
+        mImageView = (ImageView) findViewById(R.id.editor_picture);
+        mNoImageTV = (TextView) findViewById(R.id.editor_no_picture_view);
         mNameET = (EditText) findViewById(R.id.editor_name);
         mQuantityET = (EditText) findViewById(R.id.editor_quantity);
         mPriceET = (EditText) findViewById(R.id.editor_price);
-        mImageView = (ImageView) findViewById(R.id.editor_picture);
-        mNoImageTV = (TextView) findViewById(R.id.editor_no_picture_view);
+        mWarningTextView = (TextView) findViewById(R.id.editor_warning);
+
+//        mNameET.setTextColor(ContextCompat.getColor(this, R.color.editorFieldTextColor));
+//        mQuantityET.setTextColor(ContextCompat.getColor(this, R.color.editorFieldTextColor));
+//        mPriceET.setTextColor(ContextCompat.getColor(this, R.color.editorFieldTextColor));
+//        mWarningTextView.setText("");
     }
 
     @Override
@@ -119,37 +128,76 @@ public class EditorActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.editor_action_save:
-                saveProduct();
-                finish();       // Exits the activity
+                if (saveProduct()) {
+                    finish();       // Exits the activity
+                }
                 return true;
+            case R.id.editor_action_delete:
+                deleteProduct();
         }
 
         return super.onOptionsItemSelected(item);
     }
 
     /**
-     * Adds a new product or updates an existing product
+     * Adds a new product or updates an existing product.
+     *
+     * @return true if the Quantity and Price are correct, else return false.
      */
-    private void saveProduct() {
+    private boolean saveProduct() {
         // Get the user inputs
         String nameString = mNameET.getText().toString().trim();
         String quantityString = mQuantityET.getText().toString().trim();
         String priceString = mPriceET.getText().toString().trim();
         // TODO: get the image input from the user
 
-        // If all of the inputs are empty, then return without saving.
+        // If all of the inputs are empty, then return true and without saving.
         if (nameString.isEmpty() && quantityString.isEmpty() && priceString.isEmpty()) {
-            return;
+            return true;
         }
 
-        int quantity;
-        if (quantityString.isEmpty()) {
-            quantity = 0;
-        } else {
+        /* Validate quantity input */
+        int quantity = 0;
+        boolean isQuantityCorrect = true;
+
+        try {
             quantity = Integer.parseInt(quantityString);
+        } catch (NumberFormatException e) {
+            Log.e(LOG_TAG, ", saveProduct(): error with parsing Quantity.", e);
+            isQuantityCorrect = false;
+        } finally {
+            if (!isQuantityCorrect || quantity < 0) {
+                /* Display warning message to user and set the quantity text with warning color */
+                mWarningTextView.setText(getString(R.string.editor_quantity_incorrect));
+                mQuantityET.setTextColor(ContextCompat.getColor(this, R.color.editorWarningTextColor));
+            }
         }
 
-        double price = Double.parseDouble(priceString);
+        /* Validate price input */
+        Double price = .0;
+        boolean isPriceCorrect = true;
+
+        try {
+            price = Double.parseDouble(priceString);
+        } catch (NullPointerException | NumberFormatException e) {
+            Log.e(LOG_TAG, ", saveProduct(): error with parsing Price. ", e);
+            isPriceCorrect = false;
+        } finally {
+            if (!isPriceCorrect || price < .0) {
+                /* Display warning messages to user and set the price text with warning color */
+                mWarningTextView.append("\n" + getString(R.string.editor_price_incorrect));
+                mPriceET.setTextColor(ContextCompat.getColor(this, R.color.editorWarningTextColor));
+            }
+        }
+
+        /* If quantity or price is incorred, product data are not saved and return false.
+         * Else change the color of the Quantity and Price EditTexts to normal */
+        if (!isQuantityCorrect || !isPriceCorrect) {
+            return false;
+        } else {
+            mQuantityET.setTextColor(ContextCompat.getColor(this, R.color.editorFieldTextColor));
+            mPriceET.setTextColor(ContextCompat.getColor(this, R.color.editorFieldTextColor));
+        }
 
         ContentValues values = new ContentValues();
         values.put(ProductEntry.COLUMN_PRODUCT_NAME, nameString);
@@ -158,37 +206,80 @@ public class EditorActivity extends AppCompatActivity
 
         if (mCurrentProductUri == null) {
             // Add a new product
-            Uri uri = getContentResolver().insert(
-                    ProductEntry.CONTENT_URI,   // The products content URI
-                    values                      // The values to insert
-            );
+            Uri uri = null;
+            try {
+                uri = getContentResolver().insert(
+                        ProductEntry.CONTENT_URI,   // The products content URI
+                        values                      // The values to insert
+                );
+            } catch (IllegalArgumentException e) {
+                Log.e(LOG_TAG, ", saveProduct() - when inserting a product: ", e);
+            } finally {
+                if (uri != null) {
+                    long id = ContentUris.parseId(uri);
+                    Toast.makeText(this, getString(R.string.save_product_successful_with_id) + id,
+                            Toast.LENGTH_LONG).show();
 
-            long id = ContentUris.parseId(uri);
-            if (uri != null) {
-                Toast.makeText(this, getString(R.string.save_product_successful_with_id),
-                        Toast.LENGTH_LONG).show();
-
-            } else {
-                Toast.makeText(this, getString(R.string.save_product_failed),
-                        Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(this, getString(R.string.save_product_failed),
+                            Toast.LENGTH_LONG).show();
+                }
             }
-
         } else {
             // Update an existing product
-            int rowsUpdated = getContentResolver().update(
-                    mCurrentProductUri, // Content URI of the current product to update
-                    values,             // Values to update
-                    null,               // No selection
-                    null                // No selection agrs
-            );
-            if (rowsUpdated > 0) {
-                Toast.makeText(this, getString(R.string.update_product_successful),
-                        Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(this, getString(R.string.update_product_failed),
-                        Toast.LENGTH_LONG).show();
+            int rowsUpdated = 0;
+            try {
+                rowsUpdated = getContentResolver().update(
+                        mCurrentProductUri, // Content URI of the current product to update
+                        values,             // Values to update
+                        null,               // No selection
+                        null                // No selection agrs
+                );
+            } catch (IllegalArgumentException e) {
+                Log.e(LOG_TAG, ", saveProduct() - when updating a product: ", e);
+            } finally {
+                if (rowsUpdated > 0) {
+                    Toast.makeText(this, getString(R.string.update_product_successful),
+                            Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(this, getString(R.string.update_product_failed),
+                            Toast.LENGTH_LONG).show();
+                }
             }
         }
+
+        return true;
+    }
+
+    /**
+     * Deletes an existing product.
+     */
+    private void deleteProduct() {
+
+        // If the product URI is null, do nothing.
+        if (mCurrentProductUri == null) {
+            Toast.makeText(this, getString(R.string.delete_no_product_to_delete),
+                    Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        int rowsDeleted = 0;
+
+        try {
+            rowsDeleted = getContentResolver().delete(
+                    mCurrentProductUri,
+                    null,
+                    null
+            );
+        } catch (IllegalArgumentException e) {
+            Log.e(LOG_TAG, ", deleteProduct() - when deleting a product: ", e);
+            Toast.makeText(this, getString(R.string.delete_product_failed),
+                    Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        Toast.makeText(this, rowsDeleted + getString(R.string.delete_products_deleted),
+                Toast.LENGTH_LONG).show();
     }
 
     @Override

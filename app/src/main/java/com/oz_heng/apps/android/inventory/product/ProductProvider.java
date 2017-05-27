@@ -120,7 +120,8 @@ public class ProductProvider extends ContentProvider {
      */
     @Nullable
     @Override
-    public Uri insert(@NonNull Uri uri, @Nullable ContentValues contentValues) {
+    public Uri insert(@NonNull Uri uri, @Nullable ContentValues contentValues)
+            throws IllegalArgumentException {
         final int match = sUriMatcher.match(uri);
         switch (match) {
             case PRODUCTS:
@@ -134,7 +135,7 @@ public class ProductProvider extends ContentProvider {
      * Insert a product into the database with the given content values. Return the new content URI
      * for that specific row in the database.
      */
-    private Uri insertProduct(Uri uri, ContentValues values) {
+    private Uri insertProduct(Uri uri, ContentValues values) throws IllegalArgumentException {
         // Check that the name is not null nor it's empty
         String name = values.getAsString(ProductEntry.COLUMN_PRODUCT_NAME);
         if (name == null || name.isEmpty()) {
@@ -176,7 +177,8 @@ public class ProductProvider extends ContentProvider {
      * Delete the data at the given selection and selection arguments.
      */
     @Override
-    public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
+    public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs)
+            throws IllegalArgumentException {
         // Get writable database
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
 
@@ -216,7 +218,8 @@ public class ProductProvider extends ContentProvider {
      */
     @Override
     public int update(@NonNull Uri uri, @Nullable ContentValues contentValues,
-                      @Nullable String selection, @Nullable String[] selectionArgs) {
+                      @Nullable String selection, @Nullable String[] selectionArgs)
+            throws IllegalArgumentException  {
         final int match = sUriMatcher.match(uri);
         switch (match) {
             case PRODUCTS:

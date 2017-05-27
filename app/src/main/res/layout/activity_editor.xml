@@ -115,6 +115,18 @@
                 android:hint="@string/editor_product_price"
                 android:inputType="numberDecimal" />
         </LinearLayout>
+
+        <!-- Editor Warning for user -->
+        <TextView
+            android:id="@+id/editor_warning"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/editorWarningTextColor"
+            android:textAppearance="?android:textAppearanceSmall"
+            android:layout_marginTop="@dimen/activity_margin"
+            android:maxLines="6"
+            android:scrollbars="vertical"
+            tools:text="Warning for user"/>
     </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton

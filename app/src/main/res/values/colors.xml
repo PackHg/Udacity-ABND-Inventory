@@ -14,4 +14,9 @@
 
     <!-- Primary dark color for the editor -->
     <color name="editorColorPrimaryDark">#394450</color>
+
+    <!-- Color for editor warning text -->
+    <color name="editorWarningTextColor">#b71c1c</color>
+
+    <color name="editorFieldTextColor">@color/editorColorPrimaryDark</color>
 </resources>

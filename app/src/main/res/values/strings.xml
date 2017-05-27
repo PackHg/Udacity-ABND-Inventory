@@ -8,6 +8,9 @@
     <string name="save_product_failed">Error with saving product</string>
     <string name="update_product_successful">Product updated</string>
     <string name="update_product_failed">Error with updating the product</string>
+    <string name="delete_no_product_to_delete">No product to delete</string>
+    <string name="delete_products_deleted">Products have been deleted</string>
+    <string name="delete_product_failed">Error with deleting</string>
 
     <!-- Catalog String values -->
     <string name="catalog_action_insert_dummy_product">Insert a dummy product</string>
@@ -32,5 +35,7 @@
     <!-- Label for editor overflow menu option that deletes the current product [CHAR LIMIT=20] -->
     <string name="editor_action_delete">Delete</string>
 
-
+    <!-- Editor warning messages for user -->
+    <string name="editor_quantity_incorrect">Quantity is a non-decimal number, must be equal or greater than 0.&#160;</string>
+    <string name="editor_price_incorrect">Price is a decimal munber, must be equal or greater than 0.&#160;</string>
 </resources>
