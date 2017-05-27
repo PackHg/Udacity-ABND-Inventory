@@ -1,15 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
     android:padding="@dimen/activity_margin"
     tools:context=".EditorActivity">
 
-    <LinearLayout
+         <!-- Action buttons -->
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/editor_action_buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_marginBottom="@dimen/activity_margin"
+        android:orientation="horizontal">
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/editor_button_sell"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_ecommerce_cash_register"
+            android:tint="@android:color/white" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/editor_button_order"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_finance_purchase_order"
+            android:tint="@android:color/white"
+            app:layout_constraintLeft_toRightOf="@+id/editor_button_sell"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/editor_button_plus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_plus_circle_black_48dp"
+            android:tint="@android:color/white"
+            app:layout_constraintLeft_toRightOf="@+id/editor_button_order"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/editor_button_minus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_minus_circle_black_48dp"
+            android:tint="@android:color/white"
+            tools:layout_constraintBottom_creator="1"
+            app:layout_constraintLeft_toRightOf="@+id/editor_button_plus"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/editor_button_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_delete_forever_black_48dp"
+            android:tint="@android:color/white"
+            app:layout_constraintLeft_toRightOf="@+id/editor_button_minus"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp" />
+    </android.support.constraint.ConstraintLayout>
 
         <!-- Input fields -->
         <!-- Product picture -->
@@ -127,70 +181,4 @@
             android:maxLines="6"
             android:scrollbars="vertical"
             tools:text="Warning for user"/>
-    </LinearLayout>
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/editor_sell_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_above="@+id/editor_order_button"
-        android:layout_marginBottom="@dimen/activity_margin"
-        android:layout_marginRight="@dimen/activity_margin"
-        android:layout_marginEnd="@dimen/activity_margin"
-        android:src="@drawable/ic_ecommerce_cash_register"
-        android:tint="@android:color/white"/>
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/editor_order_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_above="@+id/editor_add_photo_button"
-        android:layout_marginBottom="@dimen/activity_margin"
-        android:layout_marginRight="@dimen/activity_margin"
-        android:layout_marginEnd="@dimen/activity_margin"
-        android:src="@drawable/ic_finance_purchase_order"
-        android:tint="@android:color/white"/>
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/editor_add_photo_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_above="@+id/editor_minus_button"
-        android:layout_marginBottom="@dimen/activity_margin"
-        android:layout_marginRight="@dimen/activity_margin"
-        android:layout_marginEnd="@dimen/activity_margin"
-        android:src="@drawable/ic_add_a_photo_black_48dp"
-        android:tint="@android:color/white"/>
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/editor_minus_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_above="@+id/editor_plus_button"
-        android:layout_marginBottom="@dimen/activity_margin"
-        android:layout_marginRight="@dimen/activity_margin"
-        android:layout_marginEnd="@dimen/activity_margin"
-        android:src="@drawable/ic_minus_circle_black_48dp"
-        android:tint="@android:color/white"/>
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/editor_plus_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginRight="@dimen/activity_margin"
-        android:layout_marginEnd="@dimen/activity_margin"
-        android:layout_marginBottom="4dp"
-        android:src="@drawable/ic_plus_circle_black_48dp"
-        android:tint="@android:color/white"/>
-</RelativeLayout>
+</LinearLayout>

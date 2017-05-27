@@ -32,11 +32,12 @@ import com.oz_heng.apps.android.inventory.product.ProductContract.ProductEntry;
 
 /* TODO: Is EditorActivity completed?
 *  Done: Add case to add a new product (when user clicks on + button in CatalogActivity
-*  TODO: Validate the data from the user input fields
+*  Done: Validate the data from the user input fields
 *  TODO: Option to the delete the current product
 *  Done: Do we need Menu Option Items for EditorActivity? Yes for saving the product
 *  TODO: Take picture of the product
 *  TODO: Re-arrange the floating action buttons
+*  TODO: Remove input redundant data validation, and remove Warning TextView?
 *  TODO: Force EditorActivity UI to be with Portrait mode only?
 * */
 
