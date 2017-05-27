@@ -73,7 +73,7 @@ public class CatalogActivity extends AppCompatActivity
                   Uri uri = ContentUris.withAppendedId(ProductEntry.CONTENT_URI, id);
 
                   Toast.makeText(CatalogActivity.this, "Id: " + id + "\n" +
-                          "Uri: " + uri.toString(), Toast.LENGTH_LONG).show();
+                          "Uri: " + uri.toString(), Toast.LENGTH_SHORT).show();
 
                   /* Start {@link EditorActivity} with the URI as the data field of
                     the intent */
@@ -126,9 +126,9 @@ public class CatalogActivity extends AppCompatActivity
         long id = ContentUris.parseId(uri);
 
         if (uri != null) {
-            Toast.makeText(this, getString(R.string.save_product_successful_with_id) + id, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.editor_save_product_successful_with_id) + id, Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(this, getString(R.string.save_product_failed), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.editor_save_product_failed), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -149,9 +149,9 @@ public class CatalogActivity extends AppCompatActivity
         long id = ContentUris.parseId(uri);
 
         if (uri != null) {
-            Toast.makeText(this, getString(R.string.save_product_successful_with_id) + id, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.editor_save_product_successful_with_id) + id, Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(this, getString(R.string.save_product_failed), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.editor_save_product_failed), Toast.LENGTH_SHORT).show();
         }
     }
 

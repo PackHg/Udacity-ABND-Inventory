@@ -4,13 +4,16 @@ import android.app.LoaderManager;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.CursorLoader;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
+import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -19,7 +22,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.oz_heng.apps.android.inventory.helper.Utils;
@@ -55,13 +57,9 @@ public class EditorActivity extends AppCompatActivity
     EditText mNameET;
     EditText mQuantityET;
     EditText mPriceET;
-    TextView mNoImageTV;
 
     // ImageView to display the product image
     ImageView mImageView;
-
-    TextView mWarningTextView;
-
 
     /** Boolean flag which will be true if the user updates part of the product form */
     private boolean mProductHasChanged = false;
@@ -84,6 +82,9 @@ public class EditorActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editor);
 
+        ConstraintLayout actionButtons = (ConstraintLayout) findViewById(R.id.editor_action_buttons);
+        FloatingActionButton deleteFAB = (FloatingActionButton) findViewById(R.id.editor_button_delete);
+
         Intent intent = getIntent();
         mCurrentProductUri = intent.getData();
 
@@ -91,32 +92,31 @@ public class EditorActivity extends AppCompatActivity
          * else edit an existing product */
         if (mCurrentProductUri == null) {
             setTitle(getString(R.string.editor_title_add));
-
-            // TODO: invalidate Delete option
-
+            actionButtons.setVisibility(View.INVISIBLE);
         } else {
             setTitle(getString(R.string.editor_title_edit));
             long id = ContentUris.parseId(mCurrentProductUri);
 
             Toast.makeText(this, "Id: " + id + "\n" +
-                    "Uri: " + mCurrentProductUri.toString(), Toast.LENGTH_LONG).show();
+                    "Uri: " + mCurrentProductUri.toString(), Toast.LENGTH_SHORT).show();
 
             // Initialize a loader to read the product data from the content provider
             // and display the current values in the editor
             getLoaderManager().initLoader(EXISTING_PRODUCT_LOADER, null, this);
+
+            deleteFAB.setOnClickListener(new View.OnClickListener() {
+                     @Override
+                     public void onClick(View view) {
+                         showDeleteConfirmationDialog();
+                     }
+                 }
+            );
         }
 
         mImageView = (ImageView) findViewById(R.id.editor_picture);
-        mNoImageTV = (TextView) findViewById(R.id.editor_no_picture_view);
         mNameET = (EditText) findViewById(R.id.editor_name);
         mQuantityET = (EditText) findViewById(R.id.editor_quantity);
         mPriceET = (EditText) findViewById(R.id.editor_price);
-        mWarningTextView = (TextView) findViewById(R.id.editor_warning);
-
-//        mNameET.setTextColor(ContextCompat.getColor(this, R.color.editorFieldTextColor));
-//        mQuantityET.setTextColor(ContextCompat.getColor(this, R.color.editorFieldTextColor));
-//        mPriceET.setTextColor(ContextCompat.getColor(this, R.color.editorFieldTextColor));
-//        mWarningTextView.setText("");
     }
 
     @Override
@@ -129,12 +129,9 @@ public class EditorActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.editor_action_save:
-                if (saveProduct()) {
-                    finish();       // Exits the activity
-                }
+                saveProduct();
+                finish();       // Exits the activity
                 return true;
-            case R.id.editor_action_delete:
-                deleteProduct();
         }
 
         return super.onOptionsItemSelected(item);
@@ -142,10 +139,8 @@ public class EditorActivity extends AppCompatActivity
 
     /**
      * Adds a new product or updates an existing product.
-     *
-     * @return true if the Quantity and Price are correct, else return false.
      */
-    private boolean saveProduct() {
+    private void saveProduct() {
         // Get the user inputs
         String nameString = mNameET.getText().toString().trim();
         String quantityString = mQuantityET.getText().toString().trim();
@@ -154,51 +149,11 @@ public class EditorActivity extends AppCompatActivity
 
         // If all of the inputs are empty, then return true and without saving.
         if (nameString.isEmpty() && quantityString.isEmpty() && priceString.isEmpty()) {
-            return true;
+            return;
         }
 
-        /* Validate quantity input */
-        int quantity = 0;
-        boolean isQuantityCorrect = true;
-
-        try {
-            quantity = Integer.parseInt(quantityString);
-        } catch (NumberFormatException e) {
-            Log.e(LOG_TAG, ", saveProduct(): error with parsing Quantity.", e);
-            isQuantityCorrect = false;
-        } finally {
-            if (!isQuantityCorrect || quantity < 0) {
-                /* Display warning message to user and set the quantity text with warning color */
-                mWarningTextView.setText(getString(R.string.editor_quantity_incorrect));
-                mQuantityET.setTextColor(ContextCompat.getColor(this, R.color.editorWarningTextColor));
-            }
-        }
-
-        /* Validate price input */
-        Double price = .0;
-        boolean isPriceCorrect = true;
-
-        try {
-            price = Double.parseDouble(priceString);
-        } catch (NullPointerException | NumberFormatException e) {
-            Log.e(LOG_TAG, ", saveProduct(): error with parsing Price. ", e);
-            isPriceCorrect = false;
-        } finally {
-            if (!isPriceCorrect || price < .0) {
-                /* Display warning messages to user and set the price text with warning color */
-                mWarningTextView.append("\n" + getString(R.string.editor_price_incorrect));
-                mPriceET.setTextColor(ContextCompat.getColor(this, R.color.editorWarningTextColor));
-            }
-        }
-
-        /* If quantity or price is incorred, product data are not saved and return false.
-         * Else change the color of the Quantity and Price EditTexts to normal */
-        if (!isQuantityCorrect || !isPriceCorrect) {
-            return false;
-        } else {
-            mQuantityET.setTextColor(ContextCompat.getColor(this, R.color.editorFieldTextColor));
-            mPriceET.setTextColor(ContextCompat.getColor(this, R.color.editorFieldTextColor));
-        }
+        int quantity = Integer.parseInt(quantityString);
+        Double price = Double.parseDouble(priceString);
 
         ContentValues values = new ContentValues();
         values.put(ProductEntry.COLUMN_PRODUCT_NAME, nameString);
@@ -218,12 +173,12 @@ public class EditorActivity extends AppCompatActivity
             } finally {
                 if (uri != null) {
                     long id = ContentUris.parseId(uri);
-                    Toast.makeText(this, getString(R.string.save_product_successful_with_id) + id,
-                            Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, getString(R.string.editor_save_product_successful_with_id) + id,
+                            Toast.LENGTH_SHORT).show();
 
                 } else {
-                    Toast.makeText(this, getString(R.string.save_product_failed),
-                            Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, getString(R.string.editor_save_product_failed),
+                            Toast.LENGTH_SHORT).show();
                 }
             }
         } else {
@@ -240,31 +195,58 @@ public class EditorActivity extends AppCompatActivity
                 Log.e(LOG_TAG, ", saveProduct() - when updating a product: ", e);
             } finally {
                 if (rowsUpdated > 0) {
-                    Toast.makeText(this, getString(R.string.update_product_successful),
-                            Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, getString(R.string.editor_update_product_successful),
+                            Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(this, getString(R.string.update_product_failed),
-                            Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, getString(R.string.editor_update_product_failed),
+                            Toast.LENGTH_SHORT).show();
                 }
             }
         }
-
-        return true;
     }
+
+    /**
+     * Create an AlertDialog.Builder and set the message, and click listeners
+     * for the positive and negative buttons on the dialog.
+     */
+    private void showDeleteConfirmationDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.editor_delete_dialog_msg);
+        builder.setPositiveButton(R.string.editor_delete, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked the "Delete" button, so delete the product.
+                deleteProduct();
+            }
+        });
+        builder.setNegativeButton(R.string.editor_cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked the "Cancel" button, so dismiss the dialog
+                // and continue editing the product.
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        // Create and show the AlertDialog
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
 
     /**
      * Deletes an existing product.
      */
     private void deleteProduct() {
-
         // If the product URI is null, do nothing.
         if (mCurrentProductUri == null) {
-            Toast.makeText(this, getString(R.string.delete_no_product_to_delete),
-                    Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.editor_delete_no_product_to_delete),
+                    Toast.LENGTH_SHORT).show();
             return;
         }
 
         int rowsDeleted = 0;
+        boolean isDeleteOK = true;
 
         try {
             rowsDeleted = getContentResolver().delete(
@@ -274,13 +256,17 @@ public class EditorActivity extends AppCompatActivity
             );
         } catch (IllegalArgumentException e) {
             Log.e(LOG_TAG, ", deleteProduct() - when deleting a product: ", e);
-            Toast.makeText(this, getString(R.string.delete_product_failed),
-                    Toast.LENGTH_LONG).show();
-            return;
+            isDeleteOK = false;
+        } finally {
+            if (isDeleteOK && rowsDeleted > 0) {
+                Toast.makeText(this, getString(R.string.editor_delete_product_deleted), Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, getString(R.string.editor_delete_product_failed), Toast.LENGTH_SHORT).show();
+            }
         }
 
-        Toast.makeText(this, rowsDeleted + getString(R.string.delete_products_deleted),
-                Toast.LENGTH_LONG).show();
+        // Close the activity
+        finish();
     }
 
     @Override
@@ -332,7 +318,6 @@ public class EditorActivity extends AppCompatActivity
             mQuantityET.setText(String.valueOf(quantity));
             mPriceET.setText(String.format("%.2f%n", price));
             if (image == null || image.length == 0) {
-                mNoImageTV.setVisibility(View.VISIBLE);
                 mImageView.setVisibility(View.INVISIBLE);
             } else {
                 mImageView.setVisibility(View.VISIBLE);
@@ -348,7 +333,6 @@ public class EditorActivity extends AppCompatActivity
         mQuantityET.setText("");
         mPriceET.setText("");
         mImageView.setVisibility(View.INVISIBLE);
-        mNoImageTV.setVisibility(View.VISIBLE);
     }
 
 }
