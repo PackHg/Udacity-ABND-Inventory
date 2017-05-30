@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/activity_margin"
+    android:padding="@dimen/activity_margin_half"
     tools:context="com.oz_heng.apps.android.inventory.CatalogActivity">
 
     <ListView
@@ -28,7 +28,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginBottom="4dp"
+        android:layout_marginBottom="@dimen/activity_margin_half"
         android:layout_marginRight="@dimen/activity_margin"
         android:layout_marginEnd="@dimen/activity_margin"
         android:src="@drawable/ic_plus_circle_black_48dp"

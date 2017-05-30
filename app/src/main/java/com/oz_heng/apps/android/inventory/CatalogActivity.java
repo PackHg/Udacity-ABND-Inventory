@@ -24,8 +24,14 @@ import com.oz_heng.apps.android.inventory.product.ProductContract.ProductEntry;
 import com.oz_heng.apps.android.inventory.product.ProductCursorAdapter;
 import com.oz_heng.apps.android.inventory.helper.Utils;
 
+/**
+ * Created by Pack Heng on 12/05/17
+ * pack@oz-heng.com
+ */
+
 /*
-  TODO: Optioon to delete all the products in the database
+  TODO: Option to delete all the products in the database
+  TODO: Fits weill picture in the ImageView
  */
 
 public class CatalogActivity extends AppCompatActivity

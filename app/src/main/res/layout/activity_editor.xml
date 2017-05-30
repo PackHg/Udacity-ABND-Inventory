@@ -32,7 +32,8 @@
                 android:layout_width="@dimen/editor_image_width"
                 android:layout_height="@dimen/editor_image_height"
                 android:layout_centerInParent="true"
-                android:src="@drawable/ic_add_a_photo_gray" />
+                android:src="@drawable/ic_add_a_photo_gray"
+                android:scaleType="centerCrop" />
         </RelativeLayout>
     </LinearLayout>
 

@@ -3,13 +3,17 @@ package com.oz_heng.apps.android.inventory;
 import android.app.LoaderManager;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -35,11 +39,13 @@ import com.oz_heng.apps.android.inventory.product.ProductContract.ProductEntry;
 /* TODO: Is EditorActivity completed?
 *  Done: Add case to add a new product (when user clicks on + button in CatalogActivity
 *  Done: Validate the data from the user input fields
-*  TODO: Option to the delete the current product
-*  Done: Do we need Menu Option Items for EditorActivity? Yes for saving the product
-*  TODO: Take picture of the product
+*  Done: Option to the delete the current product
+*  Done: Do we need Menu Option Items for EditorActivity? Yes for saving the product:
+*  Done: Display image of current product
+*  Done: Take picture of the product & save in database
 *  TODO: Re-arrange the floating action buttons
-*  TODO: Remove input redundant data validation, and remove Warning TextView?
+*  Done: Remove input redundant data validation, and remove Warning TextView?
+*  TODO: Fit well picture in ImageView
 *  TODO: Force EditorActivity UI to be with Portrait mode only?
 * */
 
@@ -61,6 +67,9 @@ public class EditorActivity extends AppCompatActivity
     // ImageView to display the product image
     ImageView mImageView;
 
+    // Image that may been taken bu the user
+    Bitmap mImageBitmap = null;
+
     /** Boolean flag which will be true if the user updates part of the product form */
     private boolean mProductHasChanged = false;
 
@@ -76,6 +85,9 @@ public class EditorActivity extends AppCompatActivity
             return false;
         }
     };
+
+    private static final int REQUEST_IMAGE_CAPTURE = 1;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -93,7 +105,7 @@ public class EditorActivity extends AppCompatActivity
         if (mCurrentProductUri == null) {
             setTitle(getString(R.string.editor_title_add));
             actionButtons.setVisibility(View.INVISIBLE);
-        } else {
+         } else {
             setTitle(getString(R.string.editor_title_edit));
             long id = ContentUris.parseId(mCurrentProductUri);
 
@@ -114,9 +126,18 @@ public class EditorActivity extends AppCompatActivity
         }
 
         mImageView = (ImageView) findViewById(R.id.editor_picture);
+        mImageView.setVisibility(View.VISIBLE);
         mNameET = (EditText) findViewById(R.id.editor_name);
         mQuantityET = (EditText) findViewById(R.id.editor_quantity);
         mPriceET = (EditText) findViewById(R.id.editor_price);
+
+        // Take a picture if user clicks on mImageView
+        mImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dispatchTakePictureIntent();
+            }
+        });
     }
 
     @Override
@@ -145,7 +166,6 @@ public class EditorActivity extends AppCompatActivity
         String nameString = mNameET.getText().toString().trim();
         String quantityString = mQuantityET.getText().toString().trim();
         String priceString = mPriceET.getText().toString().trim();
-        // TODO: get the image input from the user
 
         // If all of the inputs are empty, then return true and without saving.
         if (nameString.isEmpty() && quantityString.isEmpty() && priceString.isEmpty()) {
@@ -159,8 +179,12 @@ public class EditorActivity extends AppCompatActivity
         values.put(ProductEntry.COLUMN_PRODUCT_NAME, nameString);
         values.put(ProductEntry.COLUMN_PRODUCT_QUANTITY, quantity);
         values.put(ProductEntry.COLUMN_PRODUCT_PRICE, price);
+        if (mImageBitmap != null) {
+            values.put(ProductEntry.COLUMN_PRODUCT_IMAGE,
+                    Utils.bitmapToByteArray(mImageBitmap));
+        }
 
-        if (mCurrentProductUri == null) {
+            if (mCurrentProductUri == null) {
             // Add a new product
             Uri uri = null;
             try {
@@ -318,9 +342,10 @@ public class EditorActivity extends AppCompatActivity
             mQuantityET.setText(String.valueOf(quantity));
             mPriceET.setText(String.format("%.2f%n", price));
             if (image == null || image.length == 0) {
-                mImageView.setVisibility(View.INVISIBLE);
+                Bitmap addPhotoBitmap = BitmapFactory.decodeResource(getResources(),
+                        R.drawable.ic_add_a_photo_gray);
+                mImageView.setImageBitmap(addPhotoBitmap);
             } else {
-                mImageView.setVisibility(View.VISIBLE);
                 mImageView.setImageBitmap(Utils.byteArrayToBitmap(image));
             }
         }
@@ -333,6 +358,35 @@ public class EditorActivity extends AppCompatActivity
         mQuantityET.setText("");
         mPriceET.setText("");
         mImageView.setVisibility(View.INVISIBLE);
+    }
+
+    /**
+     * Invokes an intent to capture a photo.
+     */
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        }
+    }
+
+    /**
+     * Gets a picture thumbnail
+     *
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            mImageBitmap = (Bitmap) extras.get("data");
+            mImageView.setImageBitmap(mImageBitmap);
+
+            // TODO: save the imaage in database
+        }
     }
 
 }

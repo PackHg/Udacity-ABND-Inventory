@@ -6,9 +6,12 @@ package com.oz_heng.apps.android.inventory.helper;
  */
 
 import android.annotation.TargetApi;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 
 import java.io.ByteArrayOutputStream;
@@ -47,5 +50,4 @@ public final class Utils {
         bitmap.compress(Bitmap.CompressFormat.PNG, 0, outputStream);
         return outputStream.toByteArray();
     }
-
 }
