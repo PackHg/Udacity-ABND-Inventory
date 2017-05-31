@@ -26,6 +26,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.oz_heng.apps.android.inventory.helper.Utils;
@@ -94,9 +95,6 @@ public class EditorActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editor);
 
-        ConstraintLayout actionButtons = (ConstraintLayout) findViewById(R.id.editor_action_buttons);
-        FloatingActionButton deleteFAB = (FloatingActionButton) findViewById(R.id.editor_button_delete);
-
         Intent intent = getIntent();
         mCurrentProductUri = intent.getData();
 
@@ -104,7 +102,6 @@ public class EditorActivity extends AppCompatActivity
          * else edit an existing product */
         if (mCurrentProductUri == null) {
             setTitle(getString(R.string.editor_title_add));
-            actionButtons.setVisibility(View.INVISIBLE);
          } else {
             setTitle(getString(R.string.editor_title_edit));
             long id = ContentUris.parseId(mCurrentProductUri);
@@ -115,14 +112,6 @@ public class EditorActivity extends AppCompatActivity
             // Initialize a loader to read the product data from the content provider
             // and display the current values in the editor
             getLoaderManager().initLoader(EXISTING_PRODUCT_LOADER, null, this);
-
-            deleteFAB.setOnClickListener(new View.OnClickListener() {
-                     @Override
-                     public void onClick(View view) {
-                         showDeleteConfirmationDialog();
-                     }
-                 }
-            );
         }
 
         mImageView = (ImageView) findViewById(R.id.editor_picture);
@@ -152,6 +141,9 @@ public class EditorActivity extends AppCompatActivity
             case R.id.editor_action_save:
                 saveProduct();
                 finish();       // Exits the activity
+                return true;
+            case R.id.editor_menu_action_delete:
+                showDeleteConfirmationDialog();
                 return true;
         }
 
