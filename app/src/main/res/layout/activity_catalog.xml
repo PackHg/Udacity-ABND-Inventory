@@ -31,7 +31,6 @@
         android:layout_marginBottom="@dimen/activity_margin_half"
         android:layout_marginRight="@dimen/activity_margin"
         android:layout_marginEnd="@dimen/activity_margin"
-        android:src="@drawable/ic_plus_circle_black_48dp"
-        android:tint="@android:color/white"/>
+        android:src="@drawable/ic_plus_white_48dp" />
 
 </RelativeLayout>

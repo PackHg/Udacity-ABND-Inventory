@@ -44,7 +44,7 @@ import com.oz_heng.apps.android.inventory.product.ProductContract.ProductEntry;
 *  TODO: Re-arrange the floating action buttons
 *  Done: Remove input redundant data validation, and remove Warning TextView?
 *  TODO: Fit well picture in ImageView
-*  TODO: Force EditorActivity UI to be with Portrait mode only?
+*  TODO: Force EditorActivity UI to be with Portrait mode only
 * */
 
 public class EditorActivity extends AppCompatActivity

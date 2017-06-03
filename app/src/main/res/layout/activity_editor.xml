@@ -8,7 +8,6 @@
     android:padding="@dimen/activity_margin"
     tools:context=".EditorActivity">
 
-    <!-- Input fields -->
     <!-- Product picture -->
     <LinearLayout
         android:layout_width="match_parent"
@@ -32,8 +31,8 @@
                 android:layout_width="@dimen/editor_image_width"
                 android:layout_height="@dimen/editor_image_height"
                 android:layout_centerInParent="true"
-                android:src="@drawable/ic_add_a_photo_gray"
-                android:scaleType="centerCrop" />
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_add_a_photo_gray" />
         </RelativeLayout>
     </LinearLayout>
 
@@ -104,6 +103,73 @@
             android:layout_weight="2"
             android:hint="@string/editor_product_price"
             android:inputType="numberDecimal" />
+    </LinearLayout>
+
+    <!-- 1st row of buttons-->
+    <LinearLayout
+        android:id="@+id/editor_buttons_row_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_margin"
+        android:paddingBottom="@dimen/activity_margin_half"
+        android:orientation="horizontal">
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/editor_button_sale"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/activity_margin"
+            android:layout_marginRight="@dimen/activity_margin"
+            android:src="@drawable/ic_cash_register_white_48dp" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/editor_button_order"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/activity_margin"
+            android:layout_marginRight="@dimen/activity_margin"
+            android:src="@drawable/ic_purchase_order_white_48dp" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/editor_button_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/activity_margin"
+            android:layout_marginRight="@dimen/activity_margin"
+            android:src="@drawable/ic_delete_white_48dp" />
+    </LinearLayout>
+
+    <!-- 2nd row of buttons-->
+    <LinearLayout
+        android:id="@+id/editor_buttons_row_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_margin"
+        android:orientation="horizontal">
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/editor_button_plus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/activity_margin"
+            android:layout_marginRight="@dimen/activity_margin"
+            android:src="@drawable/ic_plus_white_48dp" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/editor_button_minus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/activity_margin"
+            android:layout_marginRight="@dimen/activity_margin"
+            android:src="@drawable/ic_minus_white_48dp" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/editor_button_take_photo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/activity_margin"
+            android:layout_marginRight="@dimen/activity_margin"
+            android:src="@drawable/ic_add_photo_white_48dp" />
     </LinearLayout>
 
 </LinearLayout>
