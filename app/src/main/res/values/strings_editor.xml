@@ -1,0 +1,49 @@
+<!-- Editor String values -->
+<resources>
+    <string name="editor_title_edit">Edit</string>
+    <string name="editor_title_add">Add</string>
+
+    <string name="editor_product_name">Product name</string>
+    <string name="editor_quantity_available">Quantity available</string>
+    <string name="editor_product_price">Product price</string>
+    <string name="editor_take_picture">Take picture</string>
+
+    <string name="editor_save_product_successful_with_id">Product saved with Id:&#160;</string>
+    <string name="editor_save_product_failed">Error with saving product</string>
+    <string name="editor_update_product_successful">Product updated</string>
+    <string name="editor_update_product_failed">Error with updating the product</string>
+    <string name="editor_delete_no_product_to_delete">No product to delete</string>
+    <string name="editor_delete_product_deleted">Product has been deleted</string>
+    <string name="editor_delete_product_failed">Error with deleting</string>
+
+    <!-- Warning message asking the user to enter product information [CHAR LIMIT=NONE] -->
+    <string name="editor_warning_empty_fields">"Please enter all the product information</string>
+
+    <!-- Labels for editor menu option items [CHAR LIMIT=20] -->
+    <string name="editor_menu_save">Save</string>
+    <string name="editor_menu_take_photo">Take photo</string>
+    <string name="editor_menu_plus_one">+ 1 (quantity)</string>
+    <string name="editor_menu_minus_one">- 1 (quantity)</string>
+    <string name="editor_menu_sell">Sell</string>
+    <string name="editor_menu_order">Order</string>
+    <string name="editor_menu_delete">Delete</string>
+
+    <!-- Dialog message to ask the user to confirm deleting the current product [CHAR LIMIT=NONE] -->
+    <string name="editor_delete_dialog_msg">Delete this product?</string>
+
+    <!-- Dialog button text for the option to confirm deleting the current product [CHAR LIMIT=20] -->
+    <string name="editor_delete">Delete</string>
+
+    <!-- Dialog button text for the option to cancel [CHAR LIMIT=20] -->
+    <string name="editor_cancel">Cancel</string>
+
+    <!-- Dialog message to ask the user to confirm deleting the current product [CHAR LIMIT=NONE] -->
+    <string name="editor_discard_dialog_msg">Discard your changes and quit editing?</string>
+
+    <!-- Dialog button text for the option to confirm discarding changes made by user on the
+     input fields [CHAR LIMIT=20] -->
+    <string name="editor_discard">Discard</string>
+
+    <!-- Dialog button text for the option to confirm keeping editing by user [CHAR LIMIT=20] -->
+    <string name="editor_keep_editing">Keep editing</string>
+</resources>

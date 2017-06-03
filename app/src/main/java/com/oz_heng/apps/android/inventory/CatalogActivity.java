@@ -31,7 +31,8 @@ import com.oz_heng.apps.android.inventory.helper.Utils;
 
 /*
   TODO: Option to delete all the products in the database
-  TODO: Fits weill picture in the ImageView
+  DONE: Fits weill picture in the ImageView
+  TODO: Don't Catch Generic Exception
  */
 
 public class CatalogActivity extends AppCompatActivity

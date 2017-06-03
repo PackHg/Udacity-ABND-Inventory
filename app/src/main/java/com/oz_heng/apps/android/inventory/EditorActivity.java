@@ -3,7 +3,6 @@ package com.oz_heng.apps.android.inventory;
 import android.app.LoaderManager;
 import android.content.ContentUris;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,8 +14,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -26,7 +24,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.oz_heng.apps.android.inventory.helper.Utils;
@@ -68,7 +65,7 @@ public class EditorActivity extends AppCompatActivity
     // ImageView to display the product image
     ImageView mImageView;
 
-    // Image that may been taken bu the user
+    // Image that may been taken by the user
     Bitmap mImageBitmap = null;
 
     /** Boolean flag which will be true if the user updates part of the product form */
@@ -77,7 +74,7 @@ public class EditorActivity extends AppCompatActivity
     /**
      * OnTouchListener that listens for any user touches on a View,
      * implying that they are modifying the view, and we change the
-     * mProducrHasChanged boolean to true.
+     * mProductHasChanged boolean to true.
      */
     private View.OnTouchListener mOnTouchListener = new View.OnTouchListener() {
         @Override
@@ -127,6 +124,11 @@ public class EditorActivity extends AppCompatActivity
                 dispatchTakePictureIntent();
             }
         });
+
+        // Setup OnTouchListners should the user touch and modify the input fields
+        mNameET.setOnTouchListener(mOnTouchListener);
+        mQuantityET.setOnTouchListener(mOnTouchListener);
+        mPriceET.setOnTouchListener(mOnTouchListener);
     }
 
     @Override
@@ -139,30 +141,115 @@ public class EditorActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.editor_action_save:
-                saveProduct();
-                finish();       // Exits the activity
+                 // If the product information have been saved, exit this activity
+                 if (saveProduct()) {
+                     finish();
+                 }
                 return true;
-            case R.id.editor_menu_action_delete:
+
+            case R.id.editor_menu_delete:
                 showDeleteConfirmationDialog();
                 return true;
+
+            case android.R.id.home:
+                /* If the product hasn't been modified, continue navigating up
+                   parent activity.
+                 */
+                if (!mProductHasChanged) {
+                    NavUtils.navigateUpFromSameTask(this);
+                    return true;
+                }
+
+                // Otherwise ask user to confitm discarding their changes on the product
+                DialogInterface.OnClickListener discardButtonClickListener =
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                /* Navigate up to parent activity when user clicks
+                                   "Discard" button
+                                 */
+                                NavUtils.navigateUpFromSameTask(EditorActivity.this);
+                            }
+                        };
+                showUnsavedChangesDialog(discardButtonClickListener);
+                return  true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+
+        // If adding new product then hide non applicable option menu items
+        if (mCurrentProductUri == null) {
+            menu.findItem(R.id.editor_menu_take_photo).setVisible(false);
+            menu.findItem(R.id.editor_menu_plus).setVisible(false);
+            menu.findItem(R.id.editor_menu_minus).setVisible(false);
+            menu.findItem(R.id.editor_menu_sell).setVisible(false);
+            menu.findItem(R.id.editor_menu_order).setVisible(false);
+            menu.findItem(R.id.editor_menu_delete).setVisible(false);
+        }
+
+        return true;
+    }
+
+    /**
+     * This method is called when the back button is pressed.
+     */
+    @Override
+    public void onBackPressed() {
+        // If the product hasn't changed, continue with handling back button press
+        if (!mProductHasChanged) {
+            super.onBackPressed();
+            return;
+        }
+
+        /* Otherwise if there are unsaved changes, setup a dialog to warn the user.
+           Create a click listener to handle the user confirming that changes should be
+           discarded.
+         */
+        DialogInterface.OnClickListener discardButtonClickListener =
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // User clicked "Discard" button, close the current activity.
+                        finish();
+                    }};
+
+        showUnsavedChangesDialog(discardButtonClickListener);
+    }
+
     /**
      * Adds a new product or updates an existing product.
+     *
+     * @return true if the product has been saved, else returns false.
      */
-    private void saveProduct() {
+    private boolean saveProduct() {
+
+        /* If the user hasn't touched nor modified fhe fields, there's nothing to save and
+         * return true.
+         */
+        if (!mProductHasChanged) {
+            return true;
+        }
+
         // Get the user inputs
         String nameString = mNameET.getText().toString().trim();
         String quantityString = mQuantityET.getText().toString().trim();
         String priceString = mPriceET.getText().toString().trim();
 
-        // If all of the inputs are empty, then return true and without saving.
-        if (nameString.isEmpty() && quantityString.isEmpty() && priceString.isEmpty()) {
-            return;
+        /* if some of the field inputs are empty, show Toast warning message to the user
+         * and return false */
+        if (mImageBitmap == null || nameString.isEmpty() || quantityString.isEmpty()
+                || priceString.isEmpty()) {
+            Toast.makeText(this, getString(R.string.editor_warning_empty_fields), Toast.LENGTH_LONG).show();
+            return false;
         }
+
+        // Flag whether the product has been saved or not
+        boolean isProductSaved = false;
 
         int quantity = Integer.parseInt(quantityString);
         Double price = Double.parseDouble(priceString);
@@ -176,7 +263,7 @@ public class EditorActivity extends AppCompatActivity
                     Utils.bitmapToByteArray(mImageBitmap));
         }
 
-            if (mCurrentProductUri == null) {
+        if (mCurrentProductUri == null) {
             // Add a new product
             Uri uri = null;
             try {
@@ -191,6 +278,7 @@ public class EditorActivity extends AppCompatActivity
                     long id = ContentUris.parseId(uri);
                     Toast.makeText(this, getString(R.string.editor_save_product_successful_with_id) + id,
                             Toast.LENGTH_SHORT).show();
+                    isProductSaved = true;
 
                 } else {
                     Toast.makeText(this, getString(R.string.editor_save_product_failed),
@@ -213,12 +301,15 @@ public class EditorActivity extends AppCompatActivity
                 if (rowsUpdated > 0) {
                     Toast.makeText(this, getString(R.string.editor_update_product_successful),
                             Toast.LENGTH_SHORT).show();
+                    isProductSaved = true;
                 } else {
                     Toast.makeText(this, getString(R.string.editor_update_product_failed),
                             Toast.LENGTH_SHORT).show();
                 }
             }
         }
+
+        return isProductSaved;
     }
 
     /**
@@ -249,6 +340,33 @@ public class EditorActivity extends AppCompatActivity
         alertDialog.show();
     }
 
+    /**
+     * Shows a dialog that warns the user there are unsaved changes that will be lost
+     * if they continue leaving the editor.
+     *
+     * @param discardButtonClickListener is the click listener for what to do when
+     *                                   the user confirms they want to discard changes
+     */
+    private void showUnsavedChangesDialog(
+            DialogInterface.OnClickListener discardButtonClickListener) {
+        // Create an AlertDialog.Builder and set the message, and click listeners
+        // for the positive and negative buttons on the dialog.
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.editor_discard_dialog_msg);
+        builder.setPositiveButton(R.string.editor_discard, discardButtonClickListener);
+        builder.setNegativeButton(R.string.editor_keep_editing,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if (dialogInterface != null) {
+                            dialogInterface.dismiss();
+                        }
+                    }
+                });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
 
     /**
      * Deletes an existing product.
@@ -333,12 +451,17 @@ public class EditorActivity extends AppCompatActivity
             mNameET.setText(name);
             mQuantityET.setText(String.valueOf(quantity));
             mPriceET.setText(String.format("%.2f%n", price));
-            if (image == null || image.length == 0) {
+
+            /* If the existing product has a photo, display its photo.
+             * If not, display a add photo camera image.
+             */
+            if (image != null && image.length != 0) {
+                mImageBitmap = Utils.byteArrayToBitmap(image);
+                mImageView.setImageBitmap(mImageBitmap);
+            } else {
                 Bitmap addPhotoBitmap = BitmapFactory.decodeResource(getResources(),
                         R.drawable.ic_add_a_photo_gray);
                 mImageView.setImageBitmap(addPhotoBitmap);
-            } else {
-                mImageView.setImageBitmap(Utils.byteArrayToBitmap(image));
             }
         }
     }
@@ -363,7 +486,7 @@ public class EditorActivity extends AppCompatActivity
     }
 
     /**
-     * Gets a picture thumbnail
+     * Gets a photo thumbnail
      *
      * @param requestCode
      * @param resultCode
@@ -376,8 +499,6 @@ public class EditorActivity extends AppCompatActivity
             Bundle extras = data.getExtras();
             mImageBitmap = (Bitmap) extras.get("data");
             mImageView.setImageBitmap(mImageBitmap);
-
-            // TODO: save the imaage in database
         }
     }
 

@@ -20,7 +20,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/editor_picture" />
+            android:text="@string/product_picture" />
 
         <RelativeLayout
             android:layout_width="0dp"
@@ -48,7 +48,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/editor_name" />
+            android:text="@string/product_name" />
 
         <EditText
             android:id="@+id/editor_name"
@@ -71,7 +71,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/editor_quantity" />
+            android:text="@string/product_quantity" />
 
         <EditText
             android:id="@+id/editor_quantity"
@@ -94,7 +94,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/editor_price" />
+            android:text="@string/product_price" />
 
         <EditText
             android:id="@+id/editor_price"

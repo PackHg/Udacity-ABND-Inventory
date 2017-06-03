@@ -46,7 +46,7 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:textAppearanceMedium"
-                android:text="@string/quantity"
+                android:text="@string/product_quantity"
                 android:textColor="@color/colorAccent"/>
 
             <TextView
@@ -71,7 +71,7 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:textAppearanceMedium"
-                android:text="@string/price"
+                android:text="@string/product_price"
                 android:textColor="@color/colorAccent"/>
 
             <TextView
