@@ -79,9 +79,6 @@ public class CatalogActivity extends AppCompatActivity
                                       long id) {
                   Uri uri = ContentUris.withAppendedId(ProductEntry.CONTENT_URI, id);
 
-                  Toast.makeText(CatalogActivity.this, "Id: " + id + "\n" +
-                          "Uri: " + uri.toString(), Toast.LENGTH_SHORT).show();
-
                   /* Start {@link EditorActivity} with the URI as the data field of
                     the intent */
                   Intent intent = new Intent(CatalogActivity.this, EditorActivity.class);

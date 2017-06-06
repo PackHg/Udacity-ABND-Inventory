@@ -46,4 +46,8 @@
 
     <!-- Dialog button text for the option to confirm keeping editing by user [CHAR LIMIT=20] -->
     <string name="editor_keep_editing">Keep editing</string>
+
+    <!-- Dialog message asking the quantity the user wants to increase by [CHAR LIMIT=NONE] -->
+    <string name="editor_add_quantity_dialog_msg">How much quantity you want to increase by?</string>
+
 </resources>

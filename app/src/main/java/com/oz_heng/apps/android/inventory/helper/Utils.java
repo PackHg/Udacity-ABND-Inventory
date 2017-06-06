@@ -24,11 +24,11 @@ public final class Utils {
     private Utils() {}
 
     /**
-     * Returns an array of bytes image to a bitmap.
+     * Converts an array of bytes image to a bitmap.
      * Returns null if the argument is either null or an empty array.
      *
-     * @param bytes Array of bytes
-     * @return      Bitmap
+     * @param bytes an Array of bytes
+     * @return a Bitmap
      */
     public static @Nullable Bitmap byteArrayToBitmap(@Nullable byte[] bytes) {
         if (bytes == null || bytes.length == 0) {
@@ -38,9 +38,10 @@ public final class Utils {
     }
 
     /**
+     * Converts a bitmap image to an array of bytes.
      *
-     * @param bitmap
-     * @return
+     * @param bitmap a Bitmap
+     * @return Array of bytes, or null if the bitmap is null or empty
      */
     public static @Nullable byte[] bitmapToByteArray(@Nullable Bitmap bitmap) {
         if (bitmap == null || bitmap.getByteCount() == 0) {
@@ -49,5 +50,19 @@ public final class Utils {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 0, outputStream);
         return outputStream.toByteArray();
+    }
+
+    /**
+     * Returns an int from a String.
+     *
+     * @param s a String
+     * @return an int, 0 if the String is empty
+     * @throws NumberFormatException if the {@link String} doesn't contain a parsable {@link int}
+     */
+    public static int stringToInt(String s) throws NumberFormatException {
+        if (s.isEmpty()) {
+            return 0;
+        }
+        return Integer.parseInt(s.trim());
     }
 }

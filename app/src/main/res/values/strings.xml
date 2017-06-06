@@ -6,4 +6,8 @@
     <string name="product_name">Name:</string>
     <string name="product_quantity">Quantity:</string>
     <string name="product_price">Price:</string>
+
+    <!-- For Dialog typical postive and negative buttons -->
+    <string name="OK">OK</string>
+    <string name="Cancel">Cancel</string>
 </resources>

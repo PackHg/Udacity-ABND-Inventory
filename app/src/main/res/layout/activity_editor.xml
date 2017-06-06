@@ -1,175 +1,171 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="@dimen/activity_margin"
+    android:layout_height="match_parent"
     tools:context=".EditorActivity">
 
-    <!-- Product picture -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical"
+        android:padding="@dimen/activity_margin">
 
-        <TextView
-            style="@style/EditorTextViewStyle"
-            android:layout_width="0dp"
+        <!-- Product picture -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/product_picture" />
+            android:orientation="horizontal">
 
-        <RelativeLayout
-            android:layout_width="0dp"
+            <TextView
+                style="@style/EditorTextViewStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/product_picture" />
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2">
+
+                <ImageView
+                    android:id="@+id/editor_picture"
+                    android:layout_width="@dimen/editor_image_width"
+                    android:layout_height="@dimen/editor_image_height"
+                    android:layout_centerInParent="true"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_add_a_photo_gray" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <!-- Product name -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="2">
+            android:orientation="horizontal">
 
-            <ImageView
-                android:id="@+id/editor_picture"
-                android:layout_width="@dimen/editor_image_width"
-                android:layout_height="@dimen/editor_image_height"
-                android:layout_centerInParent="true"
-                android:scaleType="centerCrop"
-                android:src="@drawable/ic_add_a_photo_gray" />
-        </RelativeLayout>
+            <TextView
+                style="@style/EditorTextViewStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/product_name" />
+
+            <EditText
+                android:id="@+id/editor_name"
+                style="@style/EditorFieldStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:hint="@string/editor_product_name"
+                android:inputType="textCapWords" />
+        </LinearLayout>
+
+        <!-- Product quantity availabe -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/EditorTextViewStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/product_quantity" />
+
+            <EditText
+                android:id="@+id/editor_quantity"
+                style="@style/EditorFieldStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:hint="@string/editor_quantity_available"
+                android:inputType="number" />
+        </LinearLayout>
+
+        <!-- Product price -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/EditorTextViewStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/product_price" />
+
+            <EditText
+                android:id="@+id/editor_price"
+                style="@style/EditorFieldStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:hint="@string/editor_product_price"
+                android:inputType="numberDecimal" />
+        </LinearLayout>
     </LinearLayout>
 
-    <!-- Product name -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            style="@style/EditorTextViewStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/product_name" />
-
-        <EditText
-            android:id="@+id/editor_name"
-            style="@style/EditorFieldStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:hint="@string/editor_product_name"
-            android:inputType="textCapWords" />
-    </LinearLayout>
-
-    <!-- Product quantity availabe -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            style="@style/EditorTextViewStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/product_quantity" />
-
-        <EditText
-            android:id="@+id/editor_quantity"
-            style="@style/EditorFieldStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:hint="@string/editor_quantity_available"
-            android:inputType="number" />
-    </LinearLayout>
-
-    <!-- Product price -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            style="@style/EditorTextViewStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/product_price" />
-
-        <EditText
-            android:id="@+id/editor_price"
-            style="@style/EditorFieldStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:hint="@string/editor_product_price"
-            android:inputType="numberDecimal" />
-    </LinearLayout>
-
-    <!-- 1st row of buttons-->
-    <LinearLayout
-        android:id="@+id/editor_buttons_row_1"
+    <!-- Action buttons -->
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/editor_button_minus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/activity_margin"
-        android:paddingBottom="@dimen/activity_margin_half"
-        android:orientation="horizontal">
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="@dimen/activity_margin_half"
+        android:src="@drawable/ic_minus_white_48dp" />
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/editor_button_sale"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/activity_margin"
-            android:layout_marginRight="@dimen/activity_margin"
-            android:src="@drawable/ic_cash_register_white_48dp" />
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/editor_button_order"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/activity_margin"
-            android:layout_marginRight="@dimen/activity_margin"
-            android:src="@drawable/ic_purchase_order_white_48dp" />
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/editor_button_delete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/activity_margin"
-            android:layout_marginRight="@dimen/activity_margin"
-            android:src="@drawable/ic_delete_white_48dp" />
-    </LinearLayout>
-
-    <!-- 2nd row of buttons-->
-    <LinearLayout
-        android:id="@+id/editor_buttons_row_2"
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/editor_button_plus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/activity_margin"
-        android:orientation="horizontal">
+        android:layout_above="@+id/editor_button_minus"
+        android:layout_alignLeft="@+id/editor_button_minus"
+        android:layout_alignStart="@+id/editor_button_minus"
+        android:src="@drawable/ic_plus_white_48dp" />
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/editor_button_plus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/activity_margin"
-            android:layout_marginRight="@dimen/activity_margin"
-            android:src="@drawable/ic_plus_white_48dp" />
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/editor_button_sale"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="@dimen/activity_margin_half"
+        android:layout_toLeftOf="@+id/editor_button_minus"
+        android:layout_toStartOf="@+id/editor_button_minus"
+        android:src="@drawable/ic_cash_register_white_48dp" />
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/editor_button_minus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/activity_margin"
-            android:layout_marginRight="@dimen/activity_margin"
-            android:src="@drawable/ic_minus_white_48dp" />
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/editor_button_order"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/editor_button_sale"
+        android:layout_alignLeft="@+id/editor_button_sale"
+        android:layout_alignStart="@+id/editor_button_sale"
+        android:src="@drawable/ic_purchase_order_white_48dp" />
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/editor_button_take_photo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/activity_margin"
-            android:layout_marginRight="@dimen/activity_margin"
-            android:src="@drawable/ic_add_photo_white_48dp" />
-    </LinearLayout>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/editor_button_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="@dimen/activity_margin_half"
+        android:layout_toLeftOf="@+id/editor_button_sale"
+        android:src="@drawable/ic_delete_white_48dp" />
 
-</LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/editor_button_take_photo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/editor_button_delete"
+        android:layout_alignStart="@+id/editor_button_delete"
+        android:layout_alignTop="@+id/editor_button_order"
+        android:src="@drawable/ic_add_photo_white_48dp" />
+
+</RelativeLayout>

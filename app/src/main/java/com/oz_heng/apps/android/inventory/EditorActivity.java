@@ -7,6 +7,7 @@ import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,9 +15,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -41,9 +44,9 @@ import com.oz_heng.apps.android.inventory.product.ProductContract.ProductEntry;
 *  Done: Do we need Menu Option Items for EditorActivity? Yes for saving the product:
 *  Done: Display image of current product
 *  Done: Take picture of the product & save in database
-*  TODO: Re-arrange the floating action buttons
+*  Done: Re-arrange the floating action buttons
 *  Done: Remove input redundant data validation, and remove Warning TextView?
-*  TODO: Fit well picture in ImageView
+*  Done: Fit well picture in ImageView
 *  TODO: Force EditorActivity UI to be with Portrait mode only
 * */
 
@@ -65,7 +68,7 @@ public class EditorActivity extends AppCompatActivity
     // ImageView to display the product image
     ImageView mImageView;
 
-    // Image that may been taken by the user
+    // Image that may be taken by the user
     Bitmap mImageBitmap = null;
 
     /** Boolean flag which will be true if the user updates part of the product form */
@@ -86,6 +89,14 @@ public class EditorActivity extends AppCompatActivity
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
 
+    // Action buttons
+    FloatingActionButton mFABMinus;
+    FloatingActionButton mFABPlus;
+    FloatingActionButton mFABSale;
+    FloatingActionButton mFABOrder;
+    FloatingActionButton mFABDelete;
+    FloatingActionButton mFABTakePhoto;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -95,20 +106,58 @@ public class EditorActivity extends AppCompatActivity
         Intent intent = getIntent();
         mCurrentProductUri = intent.getData();
 
-        /* If the intent doesn't conent a product content URI, then add a product,
+        mFABMinus = (FloatingActionButton) findViewById(R.id.editor_button_minus);
+        mFABPlus = (FloatingActionButton) findViewById(R.id.editor_button_plus);
+        mFABSale = (FloatingActionButton) findViewById(R.id.editor_button_sale);
+        mFABOrder = (FloatingActionButton) findViewById(R.id.editor_button_order);
+        mFABDelete = (FloatingActionButton) findViewById(R.id.editor_button_delete);
+        mFABTakePhoto = (FloatingActionButton) findViewById(R.id.editor_button_take_photo);
+
+        /* If the intent doesn't content a product content URI, then add a product,
          * else edit an existing product */
         if (mCurrentProductUri == null) {
-            setTitle(getString(R.string.editor_title_add));
-         } else {
-            setTitle(getString(R.string.editor_title_edit));
-            long id = ContentUris.parseId(mCurrentProductUri);
+            // Add a new product
 
-            Toast.makeText(this, "Id: " + id + "\n" +
-                    "Uri: " + mCurrentProductUri.toString(), Toast.LENGTH_SHORT).show();
+            setTitle(getString(R.string.editor_title_add));
+
+            // Hide non applicable action buttons
+            mFABMinus.setVisibility(View.INVISIBLE);
+            mFABPlus.setVisibility(View.INVISIBLE);
+            mFABSale.setVisibility(View.INVISIBLE);
+            mFABOrder.setVisibility(View.INVISIBLE);
+            mFABDelete.setVisibility(View.INVISIBLE);
+            mFABTakePhoto.setVisibility(View.INVISIBLE);
+         }
+         else {
+            // Edit an existing product
+
+            setTitle(getString(R.string.editor_title_edit));
 
             // Initialize a loader to read the product data from the content provider
             // and display the current values in the editor
             getLoaderManager().initLoader(EXISTING_PRODUCT_LOADER, null, this);
+
+            // Set OnClickListener on action buttons to trigger corresponding action
+            mFABPlus.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    showIncreaseQuanityDialog();
+                }
+            });
+            mFABDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    showDeleteConfirmationDialog();
+                }
+            });
+            mFABTakePhoto.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dispatchTakePictureIntent();
+                }
+            });
+
+
         }
 
         mImageView = (ImageView) findViewById(R.id.editor_picture);
@@ -147,10 +196,6 @@ public class EditorActivity extends AppCompatActivity
                  }
                 return true;
 
-            case R.id.editor_menu_delete:
-                showDeleteConfirmationDialog();
-                return true;
-
             case android.R.id.home:
                 /* If the product hasn't been modified, continue navigating up
                    parent activity.
@@ -176,23 +221,6 @@ public class EditorActivity extends AppCompatActivity
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-
-        // If adding new product then hide non applicable option menu items
-        if (mCurrentProductUri == null) {
-            menu.findItem(R.id.editor_menu_take_photo).setVisible(false);
-            menu.findItem(R.id.editor_menu_plus).setVisible(false);
-            menu.findItem(R.id.editor_menu_minus).setVisible(false);
-            menu.findItem(R.id.editor_menu_sell).setVisible(false);
-            menu.findItem(R.id.editor_menu_order).setVisible(false);
-            menu.findItem(R.id.editor_menu_delete).setVisible(false);
-        }
-
-        return true;
     }
 
     /**
@@ -363,6 +391,43 @@ public class EditorActivity extends AppCompatActivity
                         }
                     }
                 });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    private void showIncreaseQuanityDialog() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final EditText input = new EditText(this);
+        input.setInputType(InputType.TYPE_CLASS_NUMBER);
+        // TODO: Use simple Keyboard 12
+//        input.setRawInputType(Configuration.KEYBOARD_12KEY);
+        builder.setView(input);
+        builder.setMessage("How much quantity you want to increase by?");
+        builder.setPositiveButton(getString(R.string.OK), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                if (dialogInterface != null) {
+                    String text = input.getText().toString();
+                    if (!text.isEmpty()) {
+                        int inputQuantity = Utils.stringToInt(text);
+                        int quantity = Utils.stringToInt(mQuantityET.getText().toString());
+                        quantity += inputQuantity;
+                        mQuantityET.setText(String.valueOf(quantity));
+                    }
+                }
+            }
+        });
+
+        builder.setNegativeButton(getString(R.string.Cancel), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                if (dialogInterface != null) {
+                    dialogInterface.dismiss();
+                }
+            }
+        });
 
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
