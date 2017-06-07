@@ -7,7 +7,6 @@ import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
-import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -141,9 +140,23 @@ public class EditorActivity extends AppCompatActivity
             mFABPlus.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    showIncreaseQuanityDialog();
+                    showIncreaseQuantityDialog();
                 }
             });
+            mFABMinus.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    showDecreaseQuantityDialog();
+                }
+            });
+
+            mFABSale.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    sale();
+                }
+            });
+
             mFABDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -396,15 +409,18 @@ public class EditorActivity extends AppCompatActivity
         alertDialog.show();
     }
 
-    private void showIncreaseQuanityDialog() {
+    /**
+     * Dialog asking the user for a number to imcrease the quantity by.
+     * If input is empty, number is taken as a 0.
+     *
+     */
+    private void showIncreaseQuantityDialog() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         final EditText input = new EditText(this);
         input.setInputType(InputType.TYPE_CLASS_NUMBER);
-        // TODO: Use simple Keyboard 12
-//        input.setRawInputType(Configuration.KEYBOARD_12KEY);
         builder.setView(input);
-        builder.setMessage("How much quantity you want to increase by?");
+        builder.setMessage(getString(R.string.editor_increase_quantity_dialog_msg));
         builder.setPositiveButton(getString(R.string.OK), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -419,7 +435,43 @@ public class EditorActivity extends AppCompatActivity
                 }
             }
         });
+        builder.setNegativeButton(getString(R.string.Cancel), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                if (dialogInterface != null) {
+                    dialogInterface.dismiss();
+                }
+            }
+        });
 
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+   private void showDecreaseQuantityDialog() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final EditText input = new EditText(this);
+        input.setInputType(InputType.TYPE_CLASS_NUMBER);
+        builder.setView(input);
+        builder.setMessage(getString(R.string.editor_decrease_quantity_dialog_msg));
+        builder.setPositiveButton(getString(R.string.OK), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                if (dialogInterface != null) {
+                    String text = input.getText().toString();
+                    if (!text.isEmpty()) {
+                        int inputQuantity = Utils.stringToInt(text);
+                        int quantity = Utils.stringToInt(mQuantityET.getText().toString());
+                        quantity -= inputQuantity;
+                        if (quantity < 0) {
+                            quantity = 0;
+                        }
+                        mQuantityET.setText(String.valueOf(quantity));
+                    }
+                }
+            }
+        });
         builder.setNegativeButton(getString(R.string.Cancel), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -466,6 +518,31 @@ public class EditorActivity extends AppCompatActivity
 
         // Close the activity
         finish();
+    }
+
+    /**
+     * Decreases the current product's quantity by one if its quantity
+     * is > 0
+     */
+    private void sale() {
+        String quantityET = mQuantityET.getText().toString();
+        int quantity;
+
+        if (quantityET.isEmpty()) {
+            quantity = 0;
+        } else {
+            quantity = Utils.stringToInt(quantityET);
+        }
+
+        if (quantity <= 0) {
+            Toast.makeText(this, getString(R.string.editor_warning_product_not_in_stock),
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        quantity--;
+        mQuantityET.setText(String.valueOf(quantity));
+        Toast.makeText(this, getString(R.string.editor_one_sold), Toast.LENGTH_SHORT).show();
     }
 
     @Override
