@@ -13,7 +13,6 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.provider.MediaStore.Images;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.NavUtils;
@@ -503,9 +502,10 @@ public class EditorActivity extends AppCompatActivity
                 if (dialogInterface != null) {
                     switch (i) {
                         case 0:
-                            sms();
+                            smsOrderProduct();
                             break;
                         case 1:
+                            emailOrderProduct();
                             break;
                     }
                 }
@@ -516,7 +516,10 @@ public class EditorActivity extends AppCompatActivity
         alertDialog.show();
     }
 
-    private void sms() {
+    /**
+     * To compose a sms for ordering the current product
+     */
+    private void smsOrderProduct() {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setType("vnd.android-dir/mms-sms");
         intent.putExtra("sms_body", "Please supply ...");
@@ -526,7 +529,24 @@ public class EditorActivity extends AppCompatActivity
 //            intent.putExtra(Intent.EXTRA_STREAM, uri);
 //            intent.setType("image/png");
 //        }
-        startActivity(intent);
+        // TODO: complete smsOrderProduct() by including product information
+
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
+    }
+
+    private void emailOrderProduct() {
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("mailto:")); // only email apps should handle this
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Product order");
+        intent.putExtra(Intent.EXTRA_TEXT, "Please supply ...");
+
+        // TODO: complete emailOrderProduct() by including product information
+
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
     }
 
     /**
