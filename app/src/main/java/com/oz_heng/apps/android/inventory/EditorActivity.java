@@ -13,6 +13,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.MediaStore.Images;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.NavUtils;
@@ -47,6 +48,7 @@ import com.oz_heng.apps.android.inventory.product.ProductContract.ProductEntry;
 *  Done: Remove input redundant data validation, and remove Warning TextView?
 *  Done: Fit well picture in ImageView
 *  TODO: Force EditorActivity UI to be with Portrait mode only
+*  TODO: if a FAB changes a product data, set mProducthasChanged to true
 * */
 
 public class EditorActivity extends AppCompatActivity
@@ -140,23 +142,31 @@ public class EditorActivity extends AppCompatActivity
             mFABPlus.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    mProductHasChanged = true;
                     showIncreaseQuantityDialog();
                 }
             });
             mFABMinus.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    mProductHasChanged = true;
                     showDecreaseQuantityDialog();
                 }
             });
-
             mFABSale.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    mProductHasChanged = true;
                     sale();
                 }
             });
-
+            mFABOrder.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mProductHasChanged = true;
+                    showOrderDialog();
+                }
+            });
             mFABDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -166,11 +176,10 @@ public class EditorActivity extends AppCompatActivity
             mFABTakePhoto.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    mProductHasChanged = true;
                     dispatchTakePictureIntent();
                 }
             });
-
-
         }
 
         mImageView = (ImageView) findViewById(R.id.editor_picture);
@@ -183,6 +192,7 @@ public class EditorActivity extends AppCompatActivity
         mImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mProductHasChanged = true;
                 dispatchTakePictureIntent();
             }
         });
@@ -415,7 +425,6 @@ public class EditorActivity extends AppCompatActivity
      *
      */
     private void showIncreaseQuantityDialog() {
-
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         final EditText input = new EditText(this);
         input.setInputType(InputType.TYPE_CLASS_NUMBER);
@@ -449,7 +458,6 @@ public class EditorActivity extends AppCompatActivity
     }
 
    private void showDecreaseQuantityDialog() {
-
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         final EditText input = new EditText(this);
         input.setInputType(InputType.TYPE_CLASS_NUMBER);
@@ -483,6 +491,42 @@ public class EditorActivity extends AppCompatActivity
 
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
+    }
+
+    private void showOrderDialog() {
+        String[] choice = {"Sms", "Email"};
+        AlertDialog.Builder builder = new  AlertDialog.Builder(this);
+        builder.setTitle("Order by");
+        builder.setItems(choice, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                if (dialogInterface != null) {
+                    switch (i) {
+                        case 0:
+                            sms();
+                            break;
+                        case 1:
+                            break;
+                    }
+                }
+            }
+        });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    private void sms() {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setType("vnd.android-dir/mms-sms");
+        intent.putExtra("sms_body", "Please supply ...");
+//        if (mImageBitmap != null) {
+//            String bitmapPath = Images.Media.insertImage(getContentResolver(), mImageBitmap, "Product image", null);
+//            Uri uri = Uri.parse(bitmapPath);
+//            intent.putExtra(Intent.EXTRA_STREAM, uri);
+//            intent.setType("image/png");
+//        }
+        startActivity(intent);
     }
 
     /**
