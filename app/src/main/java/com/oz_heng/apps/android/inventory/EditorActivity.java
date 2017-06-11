@@ -47,7 +47,7 @@ import com.oz_heng.apps.android.inventory.product.ProductContract.ProductEntry;
 *  Done: Remove input redundant data validation, and remove Warning TextView?
 *  Done: Fit well picture in ImageView
 *  TODO: Force EditorActivity UI to be with Portrait mode only
-*  TODO: if a FAB changes a product data, set mProducthasChanged to true
+*  Done: if a FAB changes a product data, set mProducthasChanged to true
 * */
 
 public class EditorActivity extends AppCompatActivity
@@ -68,7 +68,7 @@ public class EditorActivity extends AppCompatActivity
     // ImageView to display the product image
     ImageView mImageView;
 
-    // Image that may be taken by the user
+    // Image that may be taken by a camera app
     Bitmap mImageBitmap = null;
 
     /** Boolean flag which will be true if the user updates part of the product form */
@@ -102,6 +102,7 @@ public class EditorActivity extends AppCompatActivity
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editor);
+
 
         Intent intent = getIntent();
         mCurrentProductUri = intent.getData();
@@ -520,9 +521,37 @@ public class EditorActivity extends AppCompatActivity
      * To compose a sms for ordering the current product
      */
     private void smsOrderProduct() {
+        String name = mNameET.getText().toString().trim();
+
+        if (name.isEmpty()) {
+            Toast.makeText(this, getString(R.string.editor_warning_empty_name_field),
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String text = getString(R.string.editor_order_intro_text) + "\n\n"
+                + getString(R.string.product_name) + " " + name + "\n"
+                + getString(R.string.product_quantity) + " ";
+
+
+        String quantity = mQuantityET.getText().toString().trim();
+        if (!quantity.isEmpty()) {
+            text += quantity;
+        }
+
+        text += "\n" + getString(R.string.product_price) + " ";
+
+        String price = mPriceET.getText().toString().trim();
+        if (!price.isEmpty()) {
+            text += price;
+        }
+
+        text += "\n\n";
+
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setType("vnd.android-dir/mms-sms");
-        intent.putExtra("sms_body", "Please supply ...");
+        intent.putExtra("sms_body", text);
+
 //        if (mImageBitmap != null) {
 //            String bitmapPath = Images.Media.insertImage(getContentResolver(), mImageBitmap, "Product image", null);
 //            Uri uri = Uri.parse(bitmapPath);
@@ -537,10 +566,37 @@ public class EditorActivity extends AppCompatActivity
     }
 
     private void emailOrderProduct() {
+        String name = mNameET.getText().toString().trim();
+
+        if (name.isEmpty()) {
+            Toast.makeText(this, getString(R.string.editor_warning_empty_name_field),
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String text = getString(R.string.editor_order_intro_text) + "\n\n"
+                + getString(R.string.product_name) + " " + name + "\n"
+                + getString(R.string.product_quantity) + " ";
+
+
+        String quantity = mQuantityET.getText().toString().trim();
+        if (!quantity.isEmpty()) {
+            text += quantity;
+        }
+
+        text += "\n" + getString(R.string.product_price) + " ";
+
+        String price = mPriceET.getText().toString().trim();
+        if (!price.isEmpty()) {
+            text += price;
+        }
+
+        text += "\n\n";
+
         Intent intent = new Intent(Intent.ACTION_SENDTO);
         intent.setData(Uri.parse("mailto:")); // only email apps should handle this
-        intent.putExtra(Intent.EXTRA_SUBJECT, "Product order");
-        intent.putExtra(Intent.EXTRA_TEXT, "Please supply ...");
+        intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.editor_order_subject_text));
+        intent.putExtra(Intent.EXTRA_TEXT, text);
 
         // TODO: complete emailOrderProduct() by including product information
 

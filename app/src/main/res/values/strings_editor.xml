@@ -19,6 +19,9 @@
     <!-- Warning message asking the user to enter product information [CHAR LIMIT=NONE] -->
     <string name="editor_warning_empty_fields">Please enter all the product information</string>
 
+    <!-- Warning message: product name is empty [CHAR LIMIT=NONE] -->
+    <string name="editor_warning_empty_name_field">Please enter product name</string>
+
     <!-- Labels for editor menu option items [CHAR LIMIT=20] -->
     <string name="editor_menu_save">Save</string>
     <string name="editor_menu_take_photo">Take photo</string>
@@ -58,5 +61,12 @@
 
    <!-- Confirmation message: one product has been sold [CHAR LIMIT=NONE] -->
     <string name="editor_one_sold">One has been sold</string>
+
+    <!-- Introduction test for order a product by sms or email [CHAR LIMIT=NONE] -->
+    <string name="editor_order_intro_text">Please supply the following product.</string>
+
+    <!-- Subject text when ordering a product by email [CHAR LIMIT=20] -->
+    <string name="editor_order_subject_text">Product order</string>
+
 
 </resources>
