@@ -21,9 +21,9 @@ public class ProductContract {
     private ProductContract() {}
 
     /**
-     * The "Content authority" is a name for the entire content provider, similar to the
-     * relationship between a domain name and its website.  A convenient string to use for the
-     * content authority is the package name for the app, which is guaranteed to be unique on the
+     * The "Content authority" is a productName for the entire content provider, similar to the
+     * relationship between a domain productName and its website.  A convenient string to use for the
+     * content authority is the package productName for the app, which is guaranteed to be unique on the
      * device.
      */
     public static final String CONTENT_AUTHORITY = "com.oz_heng.apps.android.inventory";
@@ -78,21 +78,21 @@ public class ProductContract {
          *
          * Type: TEXT
          */
-        public static final String COLUMN_PRODUCT_NAME = "name";
+        public static final String COLUMN_PRODUCT_NAME = "productName";
 
         /**
          * Quantity available of the product.
          *
          * Type: INTEGER
          */
-        public static final String COLUMN_PRODUCT_QUANTITY = "quantity";
+        public static final String COLUMN_PRODUCT_QUANTITY = "productQuantity";
 
         /**
          * Price of the product.
          *
          * Type: REAL
          */
-        public static final String COLUMN_PRODUCT_PRICE = "price";
+        public static final String COLUMN_PRODUCT_PRICE = "productPrice";
 
 
         /**

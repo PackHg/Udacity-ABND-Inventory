@@ -41,7 +41,7 @@ import com.oz_heng.apps.android.inventory.product.ProductContract.ProductEntry;
 *  Done: Validate the data from the user input fields
 *  Done: Option to the delete the current product
 *  Done: Do we need Menu Option Items for EditorActivity? Yes for saving the product:
-*  Done: Display image of current product
+*  Done: Display productImage of current product
 *  Done: Take picture of the product & save in database
 *  Done: Re-arrange the floating action buttons
 *  Done: Remove input redundant data validation, and remove Warning TextView?
@@ -65,7 +65,7 @@ public class EditorActivity extends AppCompatActivity
     EditText mQuantityET;
     EditText mPriceET;
 
-    // ImageView to display the product image
+    // ImageView to display the product productImage
     ImageView mImageView;
 
     // Image that may be taken by a camera app
@@ -420,7 +420,7 @@ public class EditorActivity extends AppCompatActivity
     }
 
     /**
-     * Dialog asking the user for a number to imcrease the quantity by.
+     * Dialog asking the user for a number to imcrease the productQuantity by.
      * If input is empty, number is taken as a 0.
      *
      */
@@ -553,10 +553,10 @@ public class EditorActivity extends AppCompatActivity
         intent.putExtra("sms_body", text);
 
 //        if (mImageBitmap != null) {
-//            String bitmapPath = Images.Media.insertImage(getContentResolver(), mImageBitmap, "Product image", null);
+//            String bitmapPath = Images.Media.insertImage(getContentResolver(), mImageBitmap, "Product productImage", null);
 //            Uri uri = Uri.parse(bitmapPath);
 //            intent.putExtra(Intent.EXTRA_STREAM, uri);
-//            intent.setType("image/png");
+//            intent.setType("productImage/png");
 //        }
         // TODO: complete smsOrderProduct() by including product information
 
@@ -641,7 +641,7 @@ public class EditorActivity extends AppCompatActivity
     }
 
     /**
-     * Decreases the current product's quantity by one if its quantity
+     * Decreases the current product's productQuantity by one if its productQuantity
      * is > 0
      */
     private void sale() {
@@ -715,7 +715,7 @@ public class EditorActivity extends AppCompatActivity
             mPriceET.setText(String.format("%.2f%n", price));
 
             /* If the existing product has a photo, display its photo.
-             * If not, display a add photo camera image.
+             * If not, display a add photo camera productImage.
              */
             if (image != null && image.length != 0) {
                 mImageBitmap = Utils.byteArrayToBitmap(image);

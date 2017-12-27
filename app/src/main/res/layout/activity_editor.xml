@@ -40,7 +40,7 @@
             </RelativeLayout>
         </LinearLayout>
 
-        <!-- Product name -->
+        <!-- ProdproductNamename -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -63,7 +63,7 @@
                 android:inputType="textCapWords" />
         </LinearLayout>
 
-        <!-- Product quantity availabe -->
+        <!-- ProdproductQuantitytity availabe -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -86,7 +86,7 @@
                 android:inputType="number" />
         </LinearLayout>
 
-        <!-- Product price -->
+        <!-- ProdproductPricerice -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

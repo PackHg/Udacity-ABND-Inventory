@@ -19,7 +19,7 @@
     <!-- Warning message asking the user to enter product information [CHAR LIMIT=NONE] -->
     <string name="editor_warning_empty_fields">Please enter all the product information</string>
 
-    <!-- Warning message: product name is empty [CHAR LIMIT=NONE] -->
+    <!-- Warning message: prodproductNamename is empty [CHAR LIMIT=NONE] -->
     <string name="editor_warning_empty_name_field">Please enter product name</string>
 
     <!-- Labels for editor menu option items [CHAR LIMIT=20] -->
@@ -50,10 +50,10 @@
     <!-- Dialog button text for the option to confirm keeping editing by user [CHAR LIMIT=20] -->
     <string name="editor_keep_editing">Keep editing</string>
 
-    <!-- Dialog message asking for a number the user wants to increase by the quantity [CHAR LIMIT=NONE] -->
+    <!-- Dialog message asking for a number the user wants to increase by productQuantitytity [CHAR LIMIT=NONE] -->
     <string name="editor_increase_quantity_dialog_msg">By how much to increase the quanity by?</string>
 
-    <!-- Dialog message asking for a number the user wants to decrease the quantity by [CHAR LIMIT=NONE] -->
+    <!-- Dialog message asking for a number the user wants to decrease productQuantitytity by [CHAR LIMIT=NONE] -->
     <string name="editor_decrease_quantity_dialog_msg">By how much to decrease the quantity by?</string>
 
     <!-- Warning message: product isn't in stock [CHAR LIMIT=NONE] -->

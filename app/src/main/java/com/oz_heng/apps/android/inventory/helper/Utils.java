@@ -5,13 +5,8 @@ package com.oz_heng.apps.android.inventory.helper;
  * pack@oz-heng.com
  */
 
-import android.annotation.TargetApi;
-import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Build;
-import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 
 import java.io.ByteArrayOutputStream;
@@ -24,7 +19,7 @@ public final class Utils {
     private Utils() {}
 
     /**
-     * Converts an array of bytes image to a bitmap.
+     * Converts an array of bytes productImage to a bitmap.
      * Returns null if the argument is either null or an empty array.
      *
      * @param bytes an Array of bytes
@@ -38,7 +33,7 @@ public final class Utils {
     }
 
     /**
-     * Converts a bitmap image to an array of bytes.
+     * Converts a bitmap productImage to an array of bytes.
      *
      * @param bitmap a Bitmap
      * @return Array of bytes, or null if the bitmap is null or empty

@@ -136,22 +136,22 @@ public class ProductProvider extends ContentProvider {
      * for that specific row in the database.
      */
     private Uri insertProduct(Uri uri, ContentValues values) throws IllegalArgumentException {
-        // Check that the name is not null nor it's empty
+        // Check that the productName is not null nor it's empty
         String name = values.getAsString(ProductEntry.COLUMN_PRODUCT_NAME);
         if (name == null || name.isEmpty()) {
-            throw new IllegalArgumentException("Product name is invalid: " + name);
+            throw new IllegalArgumentException("Product productName is invalid: " + name);
         }
 
-        // Check that the quantity is valid
+        // Check that the productQuantity is valid
         Integer quantity = values.getAsInteger(ProductEntry.COLUMN_PRODUCT_QUANTITY);
         if (quantity == null || quantity < 0) {
-            throw new IllegalArgumentException("Product quantity is invalid: " + quantity);
+            throw new IllegalArgumentException("Product productQuantity is invalid: " + quantity);
         }
 
-        // If the price is provided, check that it's not null and greater than or equal to 0
+        // If the productPrice is provided, check that it's not null and greater than or equal to 0
         Double price = values.getAsDouble(ProductEntry.COLUMN_PRODUCT_PRICE);
         if (price == null || price < 0) {
-            throw new IllegalArgumentException("Product price is invalid: " + price);
+            throw new IllegalArgumentException("Product productPrice is invalid: " + price);
         }
 
         // Get writable database
@@ -249,19 +249,19 @@ public class ProductProvider extends ContentProvider {
             return 0;
         }
 
-        // If there's a name, check it's non null
+        // If there's a productName, check it's non null
         if (values.containsKey(ProductEntry.COLUMN_PRODUCT_NAME)) {
             String name = values.getAsString(ProductEntry.COLUMN_PRODUCT_NAME);
             if (name == null) {
-                throw new IllegalArgumentException("Product name is invalid: " + name);
+                throw new IllegalArgumentException("Product productName is invalid: " + name);
             }
         }
 
-        // If there's a quantity, check it's valid
+        // If there's a productQuantity, check it's valid
         if (values.containsKey(ProductEntry.COLUMN_PRODUCT_QUANTITY)) {
             Integer quantity = values.getAsInteger(ProductEntry.COLUMN_PRODUCT_QUANTITY);
             if (quantity == null || quantity < 0) {
-                throw new IllegalArgumentException("Product quantity is invalid: " + quantity);
+                throw new IllegalArgumentException("Product productQuantity is invalid: " + quantity);
             }
         }
 
@@ -269,7 +269,7 @@ public class ProductProvider extends ContentProvider {
         if (values.containsKey(ProductEntry.COLUMN_PRODUCT_PRICE)) {
             Double price = values.getAsDouble(ProductEntry.COLUMN_PRODUCT_PRICE);
             if (price == null || price < 0) {
-                throw new IllegalArgumentException("Product price is invalid: " + price);
+                throw new IllegalArgumentException("Product productPrice is invalid: " + price);
             }
         }
 

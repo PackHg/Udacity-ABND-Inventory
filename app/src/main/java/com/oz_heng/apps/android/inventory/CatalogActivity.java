@@ -10,38 +10,39 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
-import android.support.design.widget.FloatingActionButton;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.Toast;
 
-import com.oz_heng.apps.android.inventory.product.ProductContract.ProductEntry;
-import com.oz_heng.apps.android.inventory.product.ProductCursorAdapter;
 import com.oz_heng.apps.android.inventory.helper.Utils;
-
-/**
- * Created by Pack Heng on 12/05/17
- * pack@oz-heng.com
- */
+import com.oz_heng.apps.android.inventory.product.ProductAdapter;
+import com.oz_heng.apps.android.inventory.product.ProductContract.ProductEntry;
 
 /*
-  TODO: Option to delete all the products in the database
-  DONE: Fits weill picture in the ImageView
-  TODO: Don't Catch Generic Exception
+  TODO: Handle empty view.
+  TODO: Option to delete all the products in the database.
+  DONE: Fits weill picture in the ImageView.
+  TODO: Don't Catch Generic Exception.
+  TODO: Complete CatalogActivity
  */
 
+/**
+ * Activity listing products that have been saved in the database.
+ */
 public class CatalogActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String LOG_TAG = CatalogActivity.class.getSimpleName();
 
     private static final int PRODUCT_LOADER = 0;
-    private ProductCursorAdapter mProductCursorAdapter;
+    private ProductAdapter productAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,35 +59,17 @@ public class CatalogActivity extends AppCompatActivity
             }
         });
 
-        /* Attach the cursor adapter to the ListView */
-        ListView productlistView = (ListView) findViewById(R.id.catalog_list_view);
-        mProductCursorAdapter = new ProductCursorAdapter(
-                this,
-                null    // There is no product data yet (until the loader finishes) so pass
-                        // in null for the Cursor
-        );
-        productlistView.setAdapter(mProductCursorAdapter);
-
-        /* Find and set empty view on the ListView, so that it only shows when the list has 0 items */
-        View emptyView = findViewById(R.id.catalog_empty_view);
-        productlistView.setEmptyView(emptyView);
-
-        /* Setup the list item click listener*/
-        productlistView.setOnItemClickListener(
-          new AdapterView.OnItemClickListener() {
-              @Override
-              public void onItemClick(AdapterView<?> adapterView, View view, int position,
-                                      long id) {
-                  Uri uri = ContentUris.withAppendedId(ProductEntry.CONTENT_URI, id);
-
-                  /* Start {@link EditorActivity} with the URI as the data field of
-                    the intent */
-                  Intent intent = new Intent(CatalogActivity.this, EditorActivity.class);
-                  intent.setData(uri);
-                  startActivity(intent);
-              }
-          }
-        );
+        // Create recycler view.
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.catalog_recycler_view);
+        recyclerView.setHasFixedSize(true);
+        // Create an adpater and connect it with the recycler view.
+        productAdapter = new ProductAdapter(this);
+        recyclerView.setAdapter(productAdapter);
+        // Give the recycler view a default layout manager.
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        // Adding inbuilt divider line.
+        recyclerView.addItemDecoration(new DividerItemDecoration(this,
+                LinearLayoutManager.VERTICAL));
 
         // Prepare the loader. Either re-connect with an existing one,
         // or start a new one.
@@ -120,7 +103,7 @@ public class CatalogActivity extends AppCompatActivity
     private void insertDummyProduct1() {
 
         ContentValues values = new ContentValues();
-        values.put(ProductEntry.COLUMN_PRODUCT_NAME, "Android 1");
+        values.put(ProductEntry.COLUMN_PRODUCT_NAME, "Android");
         values.put(ProductEntry.COLUMN_PRODUCT_QUANTITY, 10);
         values.put(ProductEntry.COLUMN_PRODUCT_PRICE, 1.0);
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
@@ -171,28 +154,23 @@ public class CatalogActivity extends AppCompatActivity
 
         // This loader will execute the ContentProvider's query method on a background thread.
         return new CursorLoader(
-                this,                       // Parent activity context
+                this,                // Parent activity context
                 ProductEntry.CONTENT_URI,   // Provider content URI to query
                 projection,                 // The columns to include in the resulting cursor
-                null,                       // No selection criteria
-                null,                       // No selection arguments
-                null                        // Default sort order
+                null,               // No selection criteria
+                null,            // No selection arguments
+                null                // Default sort order
         );
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        // Update {@link ProductCursorAdapter} with new cursor containing updated product data
-        mProductCursorAdapter.swapCursor(cursor);
+        // Update the adapter with new cursor containing updated product data.
+        productAdapter.setData(cursor);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        // This is called when the last Cursor provided to onLoadFinished()
-        // above is about to be closed.  We need to make sure we are no
-        // longer using it.
-        mProductCursorAdapter.swapCursor(null);
+        productAdapter.setData(null);
     }
-
-    // TODO: Complete CatalogActivity
 }
