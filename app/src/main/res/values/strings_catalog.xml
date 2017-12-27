@@ -2,5 +2,5 @@
 <resources>
     <string name="catalog_action_insert_dummy_product">Insert a dummy product</string>
     <string name="catalog_action_delete_all_products">Delete all products</string>
-    <string name="catalog_empty_view_text">Click + button to add a new product</string>
+    <string name="catalog_empty_view_text">The catalog is empty.\n Click + button to add a new product</string>
 </resources>

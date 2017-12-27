@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.oz_heng.apps.android.inventory.EditorActivity;
 import com.oz_heng.apps.android.inventory.R;
@@ -20,6 +21,8 @@ import com.oz_heng.apps.android.inventory.helper.Utils;
 import com.oz_heng.apps.android.inventory.product.ProductContract.ProductEntry;
 
 import java.util.Locale;
+
+import static android.view.View.NO_ID;
 
 
 /**
@@ -41,12 +44,17 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
             productName = (TextView) itemView.findViewById(R.id.list_item_product_name);
             productQuantity = (TextView) itemView.findViewById(R.id.list_item_product_quantity);
             productPrice = (TextView) itemView.findViewById(R.id.list_item_product_price);
-
+            
             // Define click listener for the ViewHolder's View.
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    int id = getAdapterPosition() + 1;
+                    int position = getAdapterPosition();
+                    long id = ProductAdapter.this.getItemId(position);
+
+                    // TODO: to delete.
+                    Toast.makeText(context, "Item id: " + id, Toast.LENGTH_SHORT).show();
+
                     Uri uri = ContentUris.withAppendedId(ProductEntry.CONTENT_URI, id);
 
                     // Start EditorActivity with the URI as the data field of the intent.
@@ -103,6 +111,20 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
             Log.e(LOG_TAG, "onBindViewHolder: Cursor is null.");
         }
         
+    }
+
+    @Override
+    public long getItemId(int position) {
+        if (cursor != null && cursor.moveToPosition(position)) {
+            int idCI = cursor.getColumnIndex(ProductEntry._ID);
+            return cursor.getLong(idCI);
+        }
+        return NO_ID;
+    }
+
+    @Override
+    public void setHasStableIds(boolean hasStableIds) {
+        super.setHasStableIds(true);
     }
 
     @Override
