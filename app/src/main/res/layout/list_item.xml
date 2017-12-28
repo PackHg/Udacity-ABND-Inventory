@@ -86,15 +86,6 @@
 
         </LinearLayout>
 
-        <!-- Placeholder for product id (row id in the database table) -->
-        <TextView
-            android:id="@+id/list_item_product_id"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:textAppearanceSmall"
-            android:visibility="visible"
-            tools:text="id"/>
-
     </LinearLayout>
 
 </RelativeLayout>

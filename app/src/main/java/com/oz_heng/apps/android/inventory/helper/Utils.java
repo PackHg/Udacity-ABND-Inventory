@@ -5,16 +5,23 @@ package com.oz_heng.apps.android.inventory.helper;
  * pack@oz-heng.com
  */
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.annotation.Nullable;
+import android.util.Log;
+import android.widget.Toast;
+
+import com.oz_heng.apps.android.inventory.R;
+import com.oz_heng.apps.android.inventory.product.ProductContract;
 
 import java.io.ByteArrayOutputStream;
 
 /**
- * Helper methods
+ * Helper methods.
  */
 public final class Utils {
+    private static final String LOG_TAG = Utils.class.getSimpleName();
 
     private Utils() {}
 
@@ -59,5 +66,31 @@ public final class Utils {
             return 0;
         }
         return Integer.parseInt(s.trim());
+    }
+
+    /**
+     * Delete all products from the database.
+     */
+    public static void deleteAllProducts(Context context) {
+        int rowsDeleted = 0;
+        boolean isDeleteOK = true;
+
+        try {
+            rowsDeleted = context.getContentResolver().delete(
+                    ProductContract.ProductEntry.CONTENT_URI,
+                    null,
+                    null);
+        } catch (IllegalArgumentException e) {
+            Log.e(LOG_TAG, "deleteAllProducts(): error with deleting all products.", e);
+            isDeleteOK = false;
+        } finally {
+            if (isDeleteOK && rowsDeleted > 0) {
+                Toast.makeText(context, rowsDeleted + context.getString(R.string.products_deleted_from_db),
+                        Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(context, context.getString(R.string.delete_all_products_failed),
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }

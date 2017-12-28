@@ -364,19 +364,18 @@ public class EditorActivity extends AppCompatActivity
     }
 
     /**
-     * Create an AlertDialog.Builder and set the message, and click listeners
-     * for the positive and negative buttons on the dialog.
+     * Show an {@link AlertDialog} asking the user to confirm the product deletion.
      */
     private void showDeleteConfirmationDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.editor_delete_dialog_msg);
-        builder.setPositiveButton(R.string.editor_delete, new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User clicked the "Delete" button, so delete the product.
                 deleteProduct();
             }
         });
-        builder.setNegativeButton(R.string.editor_cancel, new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User clicked the "Cancel" button, so dismiss the dialog
                 // and continue editing the product.
@@ -404,7 +403,7 @@ public class EditorActivity extends AppCompatActivity
         // for the positive and negative buttons on the dialog.
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.editor_discard_dialog_msg);
-        builder.setPositiveButton(R.string.editor_discard, discardButtonClickListener);
+        builder.setPositiveButton(R.string.discard, discardButtonClickListener);
         builder.setNegativeButton(R.string.editor_keep_editing,
                 new DialogInterface.OnClickListener() {
                     @Override
@@ -430,7 +429,7 @@ public class EditorActivity extends AppCompatActivity
         input.setInputType(InputType.TYPE_CLASS_NUMBER);
         builder.setView(input);
         builder.setMessage(getString(R.string.editor_increase_quantity_dialog_msg));
-        builder.setPositiveButton(getString(R.string.OK), new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 if (dialogInterface != null) {
@@ -444,7 +443,7 @@ public class EditorActivity extends AppCompatActivity
                 }
             }
         });
-        builder.setNegativeButton(getString(R.string.Cancel), new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 if (dialogInterface != null) {
@@ -463,7 +462,7 @@ public class EditorActivity extends AppCompatActivity
         input.setInputType(InputType.TYPE_CLASS_NUMBER);
         builder.setView(input);
         builder.setMessage(getString(R.string.editor_decrease_quantity_dialog_msg));
-        builder.setPositiveButton(getString(R.string.OK), new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 if (dialogInterface != null) {
@@ -480,7 +479,7 @@ public class EditorActivity extends AppCompatActivity
                 }
             }
         });
-        builder.setNegativeButton(getString(R.string.Cancel), new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 if (dialogInterface != null) {

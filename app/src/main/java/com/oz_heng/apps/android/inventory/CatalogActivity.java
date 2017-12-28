@@ -4,6 +4,7 @@ import android.app.LoaderManager;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.CursorLoader;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
@@ -12,6 +13,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,6 +27,8 @@ import android.widget.Toast;
 import com.oz_heng.apps.android.inventory.helper.Utils;
 import com.oz_heng.apps.android.inventory.product.ProductAdapter;
 import com.oz_heng.apps.android.inventory.product.ProductContract.ProductEntry;
+
+import static com.oz_heng.apps.android.inventory.helper.Utils.deleteAllProducts;
 
 /*
   DONE: BUG. When creating Product 1, Product 2 and Product 3. After deleting Product 1, Product 2 can't be edited.
@@ -92,60 +96,13 @@ public class CatalogActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.catalog_action_insert_dummy_pet:
-                insertDummyProduct1();
+                insertDummyProduct();
                 return true;
             case R.id.catalog_action_delete_all_pets:
-                // Todo: delete all pet entries
-                insertDummyProduct2();
+                showDeleteAllConfirmationDialog();
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    /**
-     * Helper method to insert hardcoded product data into the database. For debugging
-     * purposes only.
-     */
-    private void insertDummyProduct1() {
-
-        ContentValues values = new ContentValues();
-        values.put(ProductEntry.COLUMN_PRODUCT_NAME, "Android");
-        values.put(ProductEntry.COLUMN_PRODUCT_QUANTITY, 10);
-        values.put(ProductEntry.COLUMN_PRODUCT_PRICE, 1.0);
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
-        values.put(ProductEntry.COLUMN_PRODUCT_IMAGE, Utils.bitmapToByteArray(bitmap));
-
-        Uri uri = getContentResolver().insert(ProductEntry.CONTENT_URI, values);
-        long id = ContentUris.parseId(uri);
-
-        if (uri != null) {
-            Toast.makeText(this, getString(R.string.editor_save_product_successful_with_id) + id, Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, getString(R.string.editor_save_product_failed), Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    /**
-     * Helper method to insert hardcoded product data into the database. For debugging
-     * purposes only.
-     */
-    private void insertDummyProduct2() {
-
-        ContentValues values = new ContentValues();
-        values.put(ProductEntry.COLUMN_PRODUCT_NAME, "Android 2");
-        values.put(ProductEntry.COLUMN_PRODUCT_QUANTITY, 20);
-        values.put(ProductEntry.COLUMN_PRODUCT_PRICE, 2.0);
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher_round);
-        values.put(ProductEntry.COLUMN_PRODUCT_IMAGE, Utils.bitmapToByteArray(bitmap));
-
-        Uri uri = getContentResolver().insert(ProductEntry.CONTENT_URI, values);
-        long id = ContentUris.parseId(uri);
-
-        if (uri != null) {
-            Toast.makeText(this, getString(R.string.editor_save_product_successful_with_id) + id, Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, getString(R.string.editor_save_product_failed), Toast.LENGTH_SHORT).show();
-        }
     }
 
     @Override
@@ -186,5 +143,54 @@ public class CatalogActivity extends AppCompatActivity
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         productAdapter.setData(null);
+    }
+
+    /**
+     * Show an {@link AlertDialog} asking the user to confirm the deletion of all
+     * products.
+     */
+    private void showDeleteAllConfirmationDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.delete_all_products_dialog_msg);
+        builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked the "Delete" button, so delete all the products.
+                deleteAllProducts(CatalogActivity.this);
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked the "Cancel" button, so dismiss the dialog.
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        // Create and show the AlertDialog
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    /**
+     * Helper method to insert hardcoded product data into the database. For debugging
+     * purposes only.
+     */
+    private void insertDummyProduct() {
+        ContentValues values = new ContentValues();
+        values.put(ProductEntry.COLUMN_PRODUCT_NAME, "Android");
+        values.put(ProductEntry.COLUMN_PRODUCT_QUANTITY, 1);
+        values.put(ProductEntry.COLUMN_PRODUCT_PRICE, 1.0);
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
+        values.put(ProductEntry.COLUMN_PRODUCT_IMAGE, Utils.bitmapToByteArray(bitmap));
+
+        Uri uri = getContentResolver().insert(ProductEntry.CONTENT_URI, values);
+        long id = ContentUris.parseId(uri);
+
+        if (uri != null) {
+            Toast.makeText(this, getString(R.string.editor_save_product_successful_with_id) + id, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, getString(R.string.editor_save_product_failed), Toast.LENGTH_SHORT).show();
+        }
     }
 }

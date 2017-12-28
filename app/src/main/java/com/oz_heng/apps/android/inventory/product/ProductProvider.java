@@ -1,10 +1,5 @@
 package com.oz_heng.apps.android.inventory.product;
 
-/**
- * Created by Pack Heng on 12/05/17
- * pack@oz-heng.com
- */
-
 import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;

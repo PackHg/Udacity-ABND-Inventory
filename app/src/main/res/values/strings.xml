@@ -1,3 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+
 <resources>
     <string name="app_name">Inventory</string>
 
@@ -7,9 +9,22 @@
     <string name="product_quantity">Quantity:</string>
     <string name="product_price">Price:</string>
 
+    <string name="item_id">Item id:&#160;</string>
+
     <string name="error_no_product">NO PRODUCT</string>
 
-    <!-- For Dialog typical postive and negative buttons -->
-    <string name="OK">OK</string>
-    <string name="Cancel">Cancel</string>
+    <!-- Options for a dialog buttons [CHAR LIMIT=20] -->
+    <string name="ok">OK</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="discard">Discard</string>
+
+    <!-- Dialog message asking the user to confirm deleting of all the products [CHAR LIMIT=NONE] -->
+    <string name="delete_all_products_dialog_msg">Delete all the products?</string>
+
+    <!-- For a message indicating the number of products deleted from the database [CHAR LIMIT=NONE] -->
+    <string name="products_deleted_from_db">&#160;products deleted from the database.</string>
+
+    <!-- For a message indicating the deletion of all products from the database failed [CHAR LIMIT=NONE] -->
+    <string name="delete_all_products_failed">Error with deleting all products.</string>
 </resources>

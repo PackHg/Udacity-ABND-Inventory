@@ -51,13 +51,10 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
                 public void onClick(View view) {
                     int position = getAdapterPosition();
                     long id = ProductAdapter.this.getItemId(position);
-
-                    // TODO: to delete.
-                    Toast.makeText(context, "Item id: " + id, Toast.LENGTH_SHORT).show();
-
-                    Uri uri = ContentUris.withAppendedId(ProductEntry.CONTENT_URI, id);
+                    Toast.makeText(context, context.getString(R.string.item_id) + id, Toast.LENGTH_SHORT).show();
 
                     // Start EditorActivity with the URI as the data field of the intent.
+                    Uri uri = ContentUris.withAppendedId(ProductEntry.CONTENT_URI, id);
                     Intent intent = new Intent(context, EditorActivity.class);
                     intent.setData(uri);
                     context.startActivity(intent);
@@ -70,6 +67,10 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         this.context = context;
     }
 
+    /**
+     * Set the cursor as the data set of the adapter, and notify the data set has changed.
+     * @param cursor includes the data set.
+     */
     public void setData(Cursor cursor) {
         this.cursor = cursor;
         notifyDataSetChanged();
@@ -113,6 +114,11 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         
     }
 
+    /**
+     * Return the row id of the item at position.
+     * @param position Adapter position to query.
+     * @return Id of the item, or null if the associated cursor is null.
+     */
     @Override
     public long getItemId(int position) {
         if (cursor != null && cursor.moveToPosition(position)) {
@@ -124,6 +130,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
     @Override
     public void setHasStableIds(boolean hasStableIds) {
+        // Each item in the data set is represented with a unique identifier of type Long.
         super.setHasStableIds(true);
     }
 
