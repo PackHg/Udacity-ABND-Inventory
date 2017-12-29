@@ -40,11 +40,14 @@
     <!-- Dialog button text for the option to confirm keeping editing by user [CHAR LIMIT=20] -->
     <string name="editor_keep_editing">Keep editing</string>
 
-    <!-- Dialog message asking for a number the user wants to increase by productQuantitytity [CHAR LIMIT=NONE] -->
-    <string name="editor_increase_quantity_dialog_msg">By how much to increase the quanity by?</string>
+    <!-- Dialog message asking for a number the user wants to increase the product quantity by [CHAR LIMIT=NONE] -->
+    <string name="editor_increase_quantity_dialog_msg">By how much to increase the quantity by?</string>
 
-    <!-- Dialog message asking for a number the user wants to decrease productQuantitytity by [CHAR LIMIT=NONE] -->
+    <!-- Dialog message asking for a number the user wants to decrease the product quantity by [CHAR LIMIT=NONE] -->
     <string name="editor_decrease_quantity_dialog_msg">By how much to decrease the quantity by?</string>
+
+    <!-- Message alerting the user that his input number is incorrect for decreasing the product quantity [CHAR LIMIT=NONE] -->
+    <string name="editor_decrease_quantity_is_nok_msg">Your input number must be less than or equal to the current quantity of %1$d.</string>
 
     <!-- Warning message: product isn't in stock [CHAR LIMIT=NONE] -->
     <string name="editor_warning_product_not_in_stock">The product isn\'t in stock</string>
@@ -58,5 +61,10 @@
     <!-- Subject text when ordering a product by email [CHAR LIMIT=20] -->
     <string name="editor_order_subject_text">Product order</string>
 
-
+    <!-- Content description of the FAB's [CHAR LIMIT=50] -->
+    <string name="editor_fab_minus">Button for decreasing the current quantity</string>
+    <string name="editor_fab_plus">Button for increasing the current quantity</string>
+    <string name="editor_fab_order">Order button</string>
+    <string name="editor_fab_delete">Delete button</string>
+    <string name="editor_fab_take_photo">Take photo button</string>
 </resources>

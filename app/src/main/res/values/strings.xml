@@ -19,6 +19,9 @@
     <string name="cancel">Cancel</string>
     <string name="discard">Discard</string>
 
+    <!-- Content description of the product ImageView [CHAR LIMIT=50] -->
+    <string name="product_photo">Product photo</string>
+
     <!-- Dialog message asking the user to confirm deleting of all the products [CHAR LIMIT=NONE] -->
     <string name="delete_all_products_dialog_msg">Delete all the products?</string>
 

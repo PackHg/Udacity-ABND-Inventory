@@ -32,11 +32,11 @@ import static com.oz_heng.apps.android.inventory.helper.Utils.deleteAllProducts;
 
 /*
   DONE: BUG. When creating Product 1, Product 2 and Product 3. After deleting Product 1, Product 2 can't be edited.
-  TODO: Handle RecyclerView empty view.
-  TODO: Option to delete all the products in the database.
+  Done: Handle RecyclerView empty view.
+  Done: Option to delete all the products in the database.
   DONE: Fits weill picture in the ImageView.
-  TODO: Don't Catch Generic Exception.
-  TODO: Complete CatalogActivity
+  TODO: Don't Catch Generic Exception ??
+  Done: Complete CatalogActivity
  */
 
 /**
@@ -44,7 +44,6 @@ import static com.oz_heng.apps.android.inventory.helper.Utils.deleteAllProducts;
  */
 public class CatalogActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor> {
-
     private static final String LOG_TAG = CatalogActivity.class.getSimpleName();
 
     private static final int PRODUCT_LOADER = 0;

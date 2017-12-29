@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -34,18 +35,31 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     private Cursor cursor = null;
     private Context context;
 
-    public class ProductViewHolder extends RecyclerView.ViewHolder {
-        public final ImageView productImage;
-        public final TextView productName, productQuantity, productPrice;
+    class ProductViewHolder extends RecyclerView.ViewHolder {
+        final ImageView productImage;
+        final TextView productName, productQuantity, productPrice;
+        FloatingActionButton salesButton;
 
-        public ProductViewHolder(View itemView) {
+        ProductViewHolder(View itemView) {
             super(itemView);
             productImage = (ImageView) itemView.findViewById(R.id.list_item_product_image);
             productName = (TextView) itemView.findViewById(R.id.list_item_product_name);
             productQuantity = (TextView) itemView.findViewById(R.id.list_item_product_quantity);
             productPrice = (TextView) itemView.findViewById(R.id.list_item_product_price);
-            
-            // Define click listener for the ViewHolder's View.
+            salesButton = (FloatingActionButton) itemView.findViewById(R.id.list_item_button_sale);
+
+            // Setting up click listener for the sales button.
+            salesButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position = getAdapterPosition();
+                    long id = ProductAdapter.this.getItemId(position);
+                    Toast.makeText(context, "Sales button is clicked on item " + id,
+                            Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            // Setting up click listener for the ViewHolder's View.
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

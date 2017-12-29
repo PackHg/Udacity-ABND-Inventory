@@ -46,8 +46,9 @@ import com.oz_heng.apps.android.inventory.product.ProductContract.ProductEntry;
 *  Done: Re-arrange the floating action buttons
 *  Done: Remove input redundant data validation, and remove Warning TextView?
 *  Done: Fit well picture in ImageView
-*  TODO: Force EditorActivity UI to be with Portrait mode only
+*  Discarded: Force EditorActivity UI to be with Portrait mode only
 *  Done: if a FAB changes a product data, set mProducthasChanged to true
+*  TODO: Landscape layout for Editor.
 * */
 
 public class EditorActivity extends AppCompatActivity
@@ -470,11 +471,14 @@ public class EditorActivity extends AppCompatActivity
                     if (!text.isEmpty()) {
                         int inputQuantity = Utils.stringToInt(text);
                         int quantity = Utils.stringToInt(mQuantityET.getText().toString());
-                        quantity -= inputQuantity;
-                        if (quantity < 0) {
-                            quantity = 0;
+                        if (inputQuantity <= quantity) {
+                            quantity -= inputQuantity;
+                            mQuantityET.setText(String.valueOf(quantity));
+                        } else {
+                            Toast.makeText(EditorActivity.this,
+                                EditorActivity.this.getString(R.string.editor_decrease_quantity_is_nok_msg,
+                                quantity), Toast.LENGTH_LONG).show();
                         }
-                        mQuantityET.setText(String.valueOf(quantity));
                     }
                 }
             }
