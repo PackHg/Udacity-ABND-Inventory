@@ -8,14 +8,6 @@
     <string name="editor_product_price">Product price</string>
     <string name="editor_take_picture">Take picture</string>
 
-    <string name="editor_save_product_successful_with_id">Product saved with Id:&#160;</string>
-    <string name="editor_save_product_failed">Error with saving product</string>
-    <string name="editor_update_product_successful">Product updated</string>
-    <string name="editor_update_product_failed">Error with updating the product</string>
-    <string name="editor_delete_no_product_to_delete">No product to delete</string>
-    <string name="editor_delete_product_deleted">The product has been deleted</string>
-    <string name="editor_delete_product_failed">Error with deleting</string>
-
     <!-- Warning message asking the user to enter product information [CHAR LIMIT=NONE] -->
     <string name="editor_warning_empty_fields">Please enter all the product information</string>
 

@@ -1,7 +1,6 @@
 package com.oz_heng.apps.android.inventory;
 
 import android.app.LoaderManager;
-import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
@@ -19,7 +18,6 @@ import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -30,6 +28,10 @@ import android.widget.Toast;
 
 import com.oz_heng.apps.android.inventory.helper.Utils;
 import com.oz_heng.apps.android.inventory.product.ProductContract.ProductEntry;
+
+import static com.oz_heng.apps.android.inventory.helper.Utils.deleteProduct;
+import static com.oz_heng.apps.android.inventory.helper.Utils.insertProduct;
+import static com.oz_heng.apps.android.inventory.helper.Utils.updateProduct;
 
 /**
  * Created by Pack Heng on 12/05/17
@@ -317,48 +319,12 @@ public class EditorActivity extends AppCompatActivity
 
         if (mCurrentProductUri == null) {
             // Add a new product
-            Uri uri = null;
-            try {
-                uri = getContentResolver().insert(
-                        ProductEntry.CONTENT_URI,   // The products content URI
-                        values                      // The values to insert
-                );
-            } catch (IllegalArgumentException e) {
-                Log.e(LOG_TAG, ", saveProduct() - when inserting a product: ", e);
-            } finally {
-                if (uri != null) {
-                    long id = ContentUris.parseId(uri);
-                    Toast.makeText(this, getString(R.string.editor_save_product_successful_with_id) + id,
-                            Toast.LENGTH_SHORT).show();
-                    isProductSaved = true;
-
-                } else {
-                    Toast.makeText(this, getString(R.string.editor_save_product_failed),
-                            Toast.LENGTH_SHORT).show();
-                }
-            }
+            isProductSaved = insertProduct(this, ProductEntry.CONTENT_URI, values)
+                    != null;
         } else {
             // Update an existing product
-            int rowsUpdated = 0;
-            try {
-                rowsUpdated = getContentResolver().update(
-                        mCurrentProductUri, // Content URI of the current product to update
-                        values,             // Values to update
-                        null,               // No selection
-                        null                // No selection agrs
-                );
-            } catch (IllegalArgumentException e) {
-                Log.e(LOG_TAG, ", saveProduct() - when updating a product: ", e);
-            } finally {
-                if (rowsUpdated > 0) {
-                    Toast.makeText(this, getString(R.string.editor_update_product_successful),
-                            Toast.LENGTH_SHORT).show();
-                    isProductSaved = true;
-                } else {
-                    Toast.makeText(this, getString(R.string.editor_update_product_failed),
-                            Toast.LENGTH_SHORT).show();
-                }
-            }
+            int rowsUpdated = updateProduct(this, mCurrentProductUri, values);
+            isProductSaved = rowsUpdated > 0;
         }
 
         return isProductSaved;
@@ -373,7 +339,9 @@ public class EditorActivity extends AppCompatActivity
         builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User clicked the "Delete" button, so delete the product.
-                deleteProduct();
+                deleteProduct(EditorActivity.this, mCurrentProductUri);
+                // Close the activity
+                finish();
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -606,41 +574,6 @@ public class EditorActivity extends AppCompatActivity
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
         }
-    }
-
-    /**
-     * Deletes an existing product.
-     */
-    private void deleteProduct() {
-        // If the product URI is null, do nothing.
-        if (mCurrentProductUri == null) {
-            Toast.makeText(this, getString(R.string.editor_delete_no_product_to_delete),
-                    Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        int rowsDeleted = 0;
-        boolean isDeleteOK = true;
-
-        try {
-            rowsDeleted = getContentResolver().delete(
-                    mCurrentProductUri,
-                    null,
-                    null
-            );
-        } catch (IllegalArgumentException e) {
-            Log.e(LOG_TAG, ", deleteProduct() - when deleting a product: ", e);
-            isDeleteOK = false;
-        } finally {
-            if (isDeleteOK && rowsDeleted > 0) {
-                Toast.makeText(this, getString(R.string.editor_delete_product_deleted), Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this, getString(R.string.editor_delete_product_failed), Toast.LENGTH_SHORT).show();
-            }
-        }
-
-        // Close the activity
-        finish();
     }
 
     /**

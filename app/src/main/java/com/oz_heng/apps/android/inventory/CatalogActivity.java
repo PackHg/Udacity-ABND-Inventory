@@ -154,7 +154,7 @@ public class CatalogActivity extends AppCompatActivity
         builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User clicked the "Delete" button, so delete all the products.
-                deleteAllProducts(CatalogActivity.this);
+                deleteAllProducts(CatalogActivity.this, ProductEntry.CONTENT_URI);
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -187,9 +187,9 @@ public class CatalogActivity extends AppCompatActivity
         long id = ContentUris.parseId(uri);
 
         if (uri != null) {
-            Toast.makeText(this, getString(R.string.editor_save_product_successful_with_id) + id, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.save_product_successful_with_id) + id, Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(this, getString(R.string.editor_save_product_failed), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.save_product_failed), Toast.LENGTH_SHORT).show();
         }
     }
 }

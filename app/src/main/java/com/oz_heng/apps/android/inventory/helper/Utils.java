@@ -5,15 +5,17 @@ package com.oz_heng.apps.android.inventory.helper;
  * pack@oz-heng.com
  */
 
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.oz_heng.apps.android.inventory.R;
-import com.oz_heng.apps.android.inventory.product.ProductContract;
 
 import java.io.ByteArrayOutputStream;
 
@@ -69,15 +71,122 @@ public final class Utils {
     }
 
     /**
-     * Delete all products from the database.
+     * Insert a product into the database.
+     *
+     * @param context the application context.
+     * @param contentUri the content Uri.
+     * @param values values of the product to insert.
+     * @return the product Uri.
      */
-    public static void deleteAllProducts(Context context) {
+    public static Uri insertProduct(Context context, Uri contentUri, ContentValues values) {
+        Uri uri = null;
+
+        try {
+            uri = context.getContentResolver().insert(
+                contentUri,     // The products content URI
+                values          // The values to insert
+            );
+        } catch (IllegalArgumentException e) {
+            Log.e(LOG_TAG, "insertProduct(): error with inserting the product.", e);
+        } finally {
+            if (uri != null) {
+                long id = ContentUris.parseId(uri);
+                Toast.makeText(context, context.getString(R.string.save_product_successful_with_id) + id,
+                        Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(context, context.getString(R.string.save_product_failed),
+                        Toast.LENGTH_LONG).show();
+            }
+        }
+
+        return uri;
+    }
+
+    /**
+     * Update the product corresponding to the product Uri.
+     *
+     * @param context the application context.
+     * @param productUri the product Uri,
+     * @param values Values to update.
+     * @return number of rows updated.
+     */
+
+    public static int updateProduct(Context context, Uri productUri, ContentValues values) {
+        int rowsUpdated = 0;
+        boolean isUpdateOK = true;
+
+        try {
+            rowsUpdated = context.getContentResolver().update(
+                    productUri,         // Content URI of the current product to update
+                    values,             // Values to update
+                    null,         // No selection
+                    null     // No selection agrs
+            );
+        } catch (IllegalArgumentException e) {
+            Log.e(LOG_TAG, "updateProduct(): error with updating the product.", e);
+            isUpdateOK = false;
+        } finally {
+            if (isUpdateOK && rowsUpdated > 0) {
+                Toast.makeText(context, context.getString(R.string.update_product_successful), Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(context, context.getString(R.string.update_product_failed),
+                        Toast.LENGTH_LONG).show();
+            }
+        }
+
+        return rowsUpdated;
+    }
+
+    /**
+     * Deletes an existing product.
+     */
+    public static int deleteProduct(Context context, Uri productUri) {
+        // If the product URI is null, do nothing.
+        if (productUri == null) {
+            Toast.makeText(context, context.getString(R.string.no_product_to_delete),
+                    Toast.LENGTH_LONG).show();
+            return 0;
+        }
+
         int rowsDeleted = 0;
         boolean isDeleteOK = true;
 
         try {
             rowsDeleted = context.getContentResolver().delete(
-                    ProductContract.ProductEntry.CONTENT_URI,
+                    productUri,
+                    null,
+                    null
+            );
+        } catch (IllegalArgumentException e) {
+            Log.e(LOG_TAG, ", deleteProduct() - when deleting a product: ", e);
+            isDeleteOK = false;
+        } finally {
+            if (isDeleteOK && rowsDeleted > 0) {
+                Toast.makeText(context, context.getString(R.string.delete_product_successful),
+                        Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(context, context.getString(R.string.delete_product_failed),
+                        Toast.LENGTH_LONG).show();
+            }
+        }
+
+        return rowsDeleted;
+    }
+
+    /**
+     * Delete all products from the database.
+     *
+     * @param context the application context.
+     * @param contentUri the content Uri.
+     * @return the number of rows deleted.
+     */
+    public static int deleteAllProducts(Context context, Uri contentUri) {
+        int rowsDeleted = 0;
+        boolean isDeleteOK = true;
+
+        try {
+            rowsDeleted = context.getContentResolver().delete(
+                    contentUri,
                     null,
                     null);
         } catch (IllegalArgumentException e) {
@@ -86,11 +195,13 @@ public final class Utils {
         } finally {
             if (isDeleteOK && rowsDeleted > 0) {
                 Toast.makeText(context, rowsDeleted + context.getString(R.string.products_deleted_from_db),
-                        Toast.LENGTH_SHORT).show();
+                        Toast.LENGTH_LONG).show();
             } else {
                 Toast.makeText(context, context.getString(R.string.delete_all_products_failed),
-                        Toast.LENGTH_SHORT).show();
+                        Toast.LENGTH_LONG).show();
             }
         }
+
+        return rowsDeleted;
     }
 }

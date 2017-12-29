@@ -22,6 +22,23 @@
     <!-- Content description of the product ImageView [CHAR LIMIT=50] -->
     <string name="product_photo">Product photo</string>
 
+    <!-- For a message indicating the product has been saved with the Id in the database [CHAR LIMIT=NONE] -->
+    <string name="save_product_successful_with_id">Product saved with Id:&#160;</string>
+    <!-- For a message indicating the product has been unsuccessfully saved in the database [CHAR LIMIT=NONE] -->
+    <string name="save_product_failed">Error with saving product</string>
+
+    <!-- For a message indicating the product has been updated in the database [CHAR LIMIT=NONE] -->
+    <string name="update_product_successful">Product updated</string>
+    <!-- For a message indicating the product update in the database has failed [CHAR LIMIT=NONE] -->
+    <string name="update_product_failed">Error with updating the product</string>
+
+    <!-- For a message indicating no product to delete [CHAR LIMIT=NONE] -->
+    <string name="no_product_to_delete">No product to delete</string>
+    <!-- For a message indicating the product has been deleted from the database [CHAR LIMIT=NONE] -->
+    <string name="delete_product_successful">The product has been deleted</string>
+    <!-- For a message indicating the product has been unsuccessfully deleted from the database [CHAR LIMIT=NONE] -->
+    <string name="delete_product_failed">Error with deleting</string>
+
     <!-- Dialog message asking the user to confirm deleting of all the products [CHAR LIMIT=NONE] -->
     <string name="delete_all_products_dialog_msg">Delete all the products?</string>
 
