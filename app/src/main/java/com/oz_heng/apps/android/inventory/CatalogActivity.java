@@ -30,21 +30,12 @@ import com.oz_heng.apps.android.inventory.product.ProductContract.ProductEntry;
 
 import static com.oz_heng.apps.android.inventory.helper.Utils.deleteAllProducts;
 
-/*
-  DONE: BUG. When creating Product 1, Product 2 and Product 3. After deleting Product 1, Product 2 can't be edited.
-  Done: Handle RecyclerView empty view.
-  Done: Option to delete all the products in the database.
-  DONE: Fits weill picture in the ImageView.
-  Discarded: Don't Catch Generic Exception ??
-  Done: Complete CatalogActivity
- */
 
 /**
  * Activity listing products that have been saved in the database.
  */
 public class CatalogActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor> {
-    private static final String LOG_TAG = CatalogActivity.class.getSimpleName();
 
     private static final int PRODUCT_LOADER = 0;
     private RecyclerView recyclerView;
@@ -57,7 +48,7 @@ public class CatalogActivity extends AppCompatActivity
         setContentView(R.layout.activity_catalog);
 
         // Setup "+" Button to open EditorActivity
-        FloatingActionButton addButton = (FloatingActionButton) findViewById(R.id.catalog_plus_button);
+        FloatingActionButton addButton = findViewById(R.id.catalog_plus_button);
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -67,9 +58,9 @@ public class CatalogActivity extends AppCompatActivity
         });
 
         // Setting up recycler view.
-        recyclerView = (RecyclerView) findViewById(R.id.catalog_recycler_view);
+        recyclerView = findViewById(R.id.catalog_recycler_view);
         recyclerView.setHasFixedSize(true);
-        // Create an adpater and connect it with the recycler view.
+        // Create an adapter and connect it with the recycler view.
         productAdapter = new ProductAdapter(this);
         recyclerView.setAdapter(productAdapter);
         // Give the recycler view a default layout manager.
@@ -78,10 +69,9 @@ public class CatalogActivity extends AppCompatActivity
         recyclerView.addItemDecoration(new DividerItemDecoration(this,
                 LinearLayoutManager.VERTICAL));
 
-        emptyView = (TextView) findViewById(R.id.catalog_empty_view);
+        emptyView = findViewById(R.id.catalog_empty_view);
 
-            // Prepare the loader. Either re-connect with an existing one,
-        // or start a new one.
+        // Prepare the loader. Either re-connect with an existing one, or start a new one.
         getLoaderManager().initLoader(PRODUCT_LOADER, null, this);
     }
 
@@ -135,7 +125,7 @@ public class CatalogActivity extends AppCompatActivity
             recyclerView.setVisibility(View.GONE);
         }
 
-        // Update the adapter with new cursor containing updated product data.
+        // Update the adapter with new cursor containing the updated product data.
         productAdapter.setData(cursor);
     }
 

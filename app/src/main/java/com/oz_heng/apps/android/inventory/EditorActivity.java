@@ -34,25 +34,8 @@ import static com.oz_heng.apps.android.inventory.helper.Utils.insertProduct;
 import static com.oz_heng.apps.android.inventory.helper.Utils.updateProduct;
 
 /**
- * Created by Pack Heng on 12/05/17
- * pack@oz-heng.com
+ * Editor of an existing or new product.
  */
-
-/* Done: Is EditorActivity completed?
-*  Done: Add case to add a new product (when user clicks on + button in CatalogActivity
-*  Done: Validate the data from the user input fields
-*  Done: Option to the delete the current product
-*  Done: Do we need Menu Option Items for EditorActivity? Yes for saving the product:
-*  Done: Display productImage of current product
-*  Done: Take picture of the product & save in database
-*  Done: Re-arrange the floating action buttons
-*  Done: Remove input redundant data validation, and remove Warning TextView?
-*  Done: Fit well picture in ImageView
-*  Discarded: Force EditorActivity UI to be with Portrait mode only
-*  Done: if a FAB changes a product data, set mProducthasChanged to true
-*  Discarded: Landscape layout for Editor.
-* */
-
 public class EditorActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final String LOG_TAG = EditorActivity.class.getSimpleName();
@@ -61,14 +44,14 @@ public class EditorActivity extends AppCompatActivity
     private static final int EXISTING_PRODUCT_LOADER = 0;
 
     // Content URI for the existing product (null if it's a new product)
-    private Uri mCurrentProductUri;
+    private Uri currentProductUri;
 
-    /* EditText fields to enter the product data */
-    EditText mNameET;
+    /* EditText fields for entering the product data */
+    EditText nameET;
     EditText mQuantityET;
     EditText mPriceET;
 
-    // ImageView to display the product productImage
+    // ImageView to display the product image
     ImageView mImageView;
 
     // Image that may be taken by a camera app
@@ -105,7 +88,7 @@ public class EditorActivity extends AppCompatActivity
         setContentView(R.layout.activity_editor);
 
         Intent intent = getIntent();
-        mCurrentProductUri = intent.getData();
+        currentProductUri = intent.getData();
 
         mFABMinus = (FloatingActionButton) findViewById(R.id.editor_button_minus);
         mFABPlus = (FloatingActionButton) findViewById(R.id.editor_button_plus);
@@ -115,7 +98,7 @@ public class EditorActivity extends AppCompatActivity
 
         /* If the intent doesn't content a product content URI, then add a product,
          * else edit an existing product */
-        if (mCurrentProductUri == null) {
+        if (currentProductUri == null) {
             // Add a new product
 
             setTitle(getString(R.string.editor_title_add));
@@ -175,7 +158,7 @@ public class EditorActivity extends AppCompatActivity
 
         mImageView = (ImageView) findViewById(R.id.editor_picture);
         mImageView.setVisibility(View.VISIBLE);
-        mNameET = (EditText) findViewById(R.id.editor_name);
+        nameET = (EditText) findViewById(R.id.editor_name);
         mQuantityET = (EditText) findViewById(R.id.editor_quantity);
         mPriceET = (EditText) findViewById(R.id.editor_price);
 
@@ -189,7 +172,7 @@ public class EditorActivity extends AppCompatActivity
         });
 
         // Setup OnTouchListners should the user touch and modify the input fields
-        mNameET.setOnTouchListener(mOnTouchListener);
+        nameET.setOnTouchListener(mOnTouchListener);
         mQuantityET.setOnTouchListener(mOnTouchListener);
         mPriceET.setOnTouchListener(mOnTouchListener);
     }
@@ -278,7 +261,7 @@ public class EditorActivity extends AppCompatActivity
         }
 
         // Get the user inputs
-        String nameString = mNameET.getText().toString().trim();
+        String nameString = nameET.getText().toString().trim();
         String quantityString = mQuantityET.getText().toString().trim();
         String priceString = mPriceET.getText().toString().trim();
 
@@ -305,13 +288,13 @@ public class EditorActivity extends AppCompatActivity
                     Utils.bitmapToByteArray(mImageBitmap));
         }
 
-        if (mCurrentProductUri == null) {
+        if (currentProductUri == null) {
             // Add a new product
             isProductSaved = insertProduct(this, ProductEntry.CONTENT_URI, values)
                     != null;
         } else {
             // Update an existing product
-            int rowsUpdated = updateProduct(this, mCurrentProductUri, values);
+            int rowsUpdated = updateProduct(this, currentProductUri, values);
             isProductSaved = rowsUpdated > 0;
         }
 
@@ -327,7 +310,7 @@ public class EditorActivity extends AppCompatActivity
         builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User clicked the "Delete" button, so delete the product.
-                deleteProduct(EditorActivity.this, mCurrentProductUri);
+                deleteProduct(EditorActivity.this, currentProductUri);
                 // Close the activity
                 finish();
             }
@@ -480,44 +463,38 @@ public class EditorActivity extends AppCompatActivity
      * To compose a sms for ordering the current product
      */
     private void smsOrderProduct() {
-        String name = mNameET.getText().toString().trim();
+        String name = nameET.getText().toString().trim();
 
         if (name.isEmpty()) {
             Toast.makeText(this, getString(R.string.editor_warning_empty_name_field),
-                    Toast.LENGTH_SHORT).show();
+                    Toast.LENGTH_LONG).show();
             return;
         }
 
-        String text = getString(R.string.editor_order_intro_text) + "\n\n"
-                + getString(R.string.product_name) + " " + name + "\n"
-                + getString(R.string.product_quantity) + " ";
+        StringBuilder stringBuilder = new StringBuilder();
+
+        stringBuilder.append(getString(R.string.editor_order_intro_text)).append("\n\n")
+                .append(getString(R.string.product_name)).append(" ").append(name).append("\n")
+                .append(getString(R.string.product_quantity)).append(" ");
 
 
         String quantity = mQuantityET.getText().toString().trim();
         if (!quantity.isEmpty()) {
-            text += quantity;
+            stringBuilder.append(quantity);
         }
 
-        text += "\n" + getString(R.string.product_price) + " ";
+        stringBuilder.append("\n").append(getString(R.string.product_price)).append(" ");
 
         String price = mPriceET.getText().toString().trim();
         if (!price.isEmpty()) {
-            text += price;
+            stringBuilder.append(price);
         }
 
-        text += "\n\n";
+        stringBuilder.append("\n\n");
 
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setType("vnd.android-dir/mms-sms");
-        intent.putExtra("sms_body", text);
-
-//        if (mImageBitmap != null) {
-//            String bitmapPath = Images.Media.insertImage(getContentResolver(), mImageBitmap, "Product productImage", null);
-//            Uri uri = Uri.parse(bitmapPath);
-//            intent.putExtra(Intent.EXTRA_STREAM, uri);
-//            intent.setType("productImage/png");
-//        }
-        // TODO: complete smsOrderProduct() by including product information
+        intent.putExtra("sms_body", stringBuilder.toString());
 
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
@@ -525,39 +502,39 @@ public class EditorActivity extends AppCompatActivity
     }
 
     private void emailOrderProduct() {
-        String name = mNameET.getText().toString().trim();
+        String name = nameET.getText().toString().trim();
 
         if (name.isEmpty()) {
             Toast.makeText(this, getString(R.string.editor_warning_empty_name_field),
-                    Toast.LENGTH_SHORT).show();
+                    Toast.LENGTH_LONG).show();
             return;
         }
 
-        String text = getString(R.string.editor_order_intro_text) + "\n\n"
-                + getString(R.string.product_name) + " " + name + "\n"
-                + getString(R.string.product_quantity) + " ";
+        StringBuilder stringBuilder = new StringBuilder();
+
+        stringBuilder.append(getString(R.string.editor_order_intro_text)).append("\n\n")
+                .append(getString(R.string.product_name)).append(" ").append(name).append("\n")
+                .append(getString(R.string.product_quantity)).append(" ");
 
 
         String quantity = mQuantityET.getText().toString().trim();
         if (!quantity.isEmpty()) {
-            text += quantity;
+            stringBuilder.append(quantity);
         }
 
-        text += "\n" + getString(R.string.product_price) + " ";
+        stringBuilder.append("\n").append(getString(R.string.product_price)).append(" ");
 
         String price = mPriceET.getText().toString().trim();
         if (!price.isEmpty()) {
-            text += price;
+            stringBuilder.append(price);
         }
 
-        text += "\n\n";
+        stringBuilder.append("\n\n");
 
         Intent intent = new Intent(Intent.ACTION_SENDTO);
         intent.setData(Uri.parse("mailto:")); // only email apps should handle this
         intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.editor_order_subject_text));
-        intent.putExtra(Intent.EXTRA_TEXT, text);
-
-        // TODO: complete emailOrderProduct() by including product information
+        intent.putExtra(Intent.EXTRA_TEXT, stringBuilder.toString());
 
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
@@ -579,7 +556,7 @@ public class EditorActivity extends AppCompatActivity
         // This loader will execute the ContentProvider's query method on a background thread.
         return new CursorLoader(
                 this,                   // Context of parent activity
-                mCurrentProductUri,    // Content URI of the relevent product
+                currentProductUri,    // Content URI of the relevent product
                 projection,             // The columns to be included in the resulting cursor
                 null,                   // No selection criteria
                 null,                   // No selection arguments
@@ -609,7 +586,7 @@ public class EditorActivity extends AppCompatActivity
             byte[] image = cursor.getBlob(imageCI);
 
             // Update the fields
-            mNameET.setText(name);
+            nameET.setText(name);
             mQuantityET.setText(String.valueOf(quantity));
             mPriceET.setText(String.format("%.2f%n", price));
 
@@ -630,7 +607,7 @@ public class EditorActivity extends AppCompatActivity
     @Override
     public void onLoaderReset(Loader loader) {
         // If the loader is invalidated, clear out all the data from the input fields.
-        mNameET.setText("");
+        nameET.setText("");
         mQuantityET.setText("");
         mPriceET.setText("");
         mImageView.setVisibility(View.INVISIBLE);
