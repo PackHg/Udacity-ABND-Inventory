@@ -35,23 +35,23 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     private static final String LOG_TAG = ProductAdapter.class.getSimpleName();
 
     private Cursor cursor = null;
-    private Context context;
+    private final Context context;
 
     class ProductViewHolder extends RecyclerView.ViewHolder {
         final ImageView productImage;
         final TextView productName, productQuantity, productPrice;
-        FloatingActionButton salesButton;
+        final FloatingActionButton saleButton;
 
         ProductViewHolder(View itemView) {
             super(itemView);
-            productImage = (ImageView) itemView.findViewById(R.id.list_item_product_image);
-            productName = (TextView) itemView.findViewById(R.id.list_item_product_name);
-            productQuantity = (TextView) itemView.findViewById(R.id.list_item_product_quantity);
-            productPrice = (TextView) itemView.findViewById(R.id.list_item_product_price);
-            salesButton = (FloatingActionButton) itemView.findViewById(R.id.list_item_button_sale);
+            productImage = itemView.findViewById(R.id.list_item_product_image);
+            productName = itemView.findViewById(R.id.list_item_product_name);
+            productQuantity = itemView.findViewById(R.id.list_item_product_quantity);
+            productPrice = itemView.findViewById(R.id.list_item_product_price);
+            saleButton = itemView.findViewById(R.id.list_item_button_sale);
 
             // Setting up click listener for the sales button.
-            salesButton.setOnClickListener(new View.OnClickListener() {
+            saleButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     int position = getAdapterPosition();
@@ -62,7 +62,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
                     if (quantity > 0) {
                         quantity--;
 
-                        // Update the product quanity in the database.
+                        // Update the product quantity in the database.
                         Uri productUri = ContentUris.withAppendedId(ProductEntry.CONTENT_URI, id);
                         ContentValues values = new ContentValues();
                         values.put(ProductEntry.COLUMN_PRODUCT_QUANTITY, quantity);

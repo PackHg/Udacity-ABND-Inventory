@@ -1,10 +1,5 @@
 package com.oz_heng.apps.android.inventory.product;
 
-/**
- * Created by Pack Heng on 12/05/17
- * pack@oz-heng.com
- */
-
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;

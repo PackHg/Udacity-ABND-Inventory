@@ -30,7 +30,6 @@ import com.oz_heng.apps.android.inventory.product.ProductContract.ProductEntry;
 
 import static com.oz_heng.apps.android.inventory.helper.Utils.deleteAllProducts;
 
-
 /**
  * Activity listing products that have been saved in the database.
  */

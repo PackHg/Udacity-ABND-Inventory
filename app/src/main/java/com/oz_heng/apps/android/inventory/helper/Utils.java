@@ -1,10 +1,5 @@
 package com.oz_heng.apps.android.inventory.helper;
 
-/*
- * Created by Pack Heng on 21/05/17
- * pack@oz-heng.com
- */
-
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
@@ -28,7 +23,7 @@ public final class Utils {
     private Utils() {}
 
     /**
-     * Converts an array of bytes productImage to a bitmap.
+     * Converts an array of bytes of an image to a bitmap.
      * Returns null if the argument is either null or an empty array.
      *
      * @param bytes an Array of bytes
@@ -42,7 +37,7 @@ public final class Utils {
     }
 
     /**
-     * Converts a bitmap productImage to an array of bytes.
+     * Converts a bitmap of an image to an array of bytes.
      *
      * @param bitmap a Bitmap
      * @return Array of bytes, or null if the bitmap is null or empty
@@ -107,7 +102,7 @@ public final class Utils {
      *
      * @param context the application context.
      * @param productUri the product Uri,
-     * @param values Values to update.
+     * @param values to update.
      * @return number of rows updated.
      */
 
@@ -138,7 +133,7 @@ public final class Utils {
     }
 
     /**
-     * Deletes an existing product.
+     * Delete an existing product.
      */
     public static int deleteProduct(Context context, Uri productUri) {
         // If the product URI is null, do nothing.

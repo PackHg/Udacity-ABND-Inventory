@@ -1,10 +1,5 @@
 package com.oz_heng.apps.android.inventory.product;
 
-/**
- * Created by Pack Heng on 12/05/17
- * pack@oz-heng.com
- */
-
 import android.content.ContentResolver;
 import android.net.Uri;
 import android.provider.BaseColumns;
@@ -21,9 +16,9 @@ public class ProductContract {
     private ProductContract() {}
 
     /**
-     * The "Content authority" is a productName for the entire content provider, similar to the
-     * relationship between a domain productName and its website.  A convenient string to use for the
-     * content authority is the package productName for the app, which is guaranteed to be unique on the
+     * The "Content authority" is a name for the entire content provider, similar to the
+     * relationship between a domain name and its website.  A convenient string to use for the
+     * content authority is the package name for the app, which is guaranteed to be unique on the
      * device.
      */
     public static final String CONTENT_AUTHORITY = "com.oz_heng.apps.android.inventory";

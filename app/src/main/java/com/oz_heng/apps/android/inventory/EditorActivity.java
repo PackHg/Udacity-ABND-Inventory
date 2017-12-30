@@ -29,6 +29,8 @@ import android.widget.Toast;
 import com.oz_heng.apps.android.inventory.helper.Utils;
 import com.oz_heng.apps.android.inventory.product.ProductContract.ProductEntry;
 
+import java.util.Locale;
+
 import static com.oz_heng.apps.android.inventory.helper.Utils.deleteProduct;
 import static com.oz_heng.apps.android.inventory.helper.Utils.insertProduct;
 import static com.oz_heng.apps.android.inventory.helper.Utils.updateProduct;
@@ -38,7 +40,6 @@ import static com.oz_heng.apps.android.inventory.helper.Utils.updateProduct;
  */
 public class EditorActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor> {
-    private static final String LOG_TAG = EditorActivity.class.getSimpleName();
 
     // Uses existing loader used by CatalogActivity
     private static final int EXISTING_PRODUCT_LOADER = 0;
@@ -47,40 +48,31 @@ public class EditorActivity extends AppCompatActivity
     private Uri currentProductUri;
 
     /* EditText fields for entering the product data */
-    EditText nameET;
-    EditText mQuantityET;
-    EditText mPriceET;
+    private EditText nameET, quantityET, priceET;
 
     // ImageView to display the product image
-    ImageView mImageView;
+    private ImageView imageView;
 
     // Image that may be taken by a camera app
-    Bitmap mImageBitmap = null;
+    private Bitmap imageBitmap = null;
 
     /** Boolean flag which will be true if the user updates part of the product form */
-    private boolean mProductHasChanged = false;
+    private boolean productHasChanged = false;
 
     /**
      * OnTouchListener that listens for any user touches on a View,
      * implying that they are modifying the view, and we change the
-     * mProductHasChanged boolean to true.
+     * productHasChanged boolean to true.
      */
-    private View.OnTouchListener mOnTouchListener = new View.OnTouchListener() {
+    private final View.OnTouchListener onTouchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {
-            mProductHasChanged = true;
+            productHasChanged = true;
             return false;
         }
     };
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
-
-    // Action buttons
-    FloatingActionButton mFABMinus;
-    FloatingActionButton mFABPlus;
-    FloatingActionButton mFABOrder;
-    FloatingActionButton mFABDelete;
-    FloatingActionButton mFABTakePhoto;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -90,11 +82,11 @@ public class EditorActivity extends AppCompatActivity
         Intent intent = getIntent();
         currentProductUri = intent.getData();
 
-        mFABMinus = (FloatingActionButton) findViewById(R.id.editor_button_minus);
-        mFABPlus = (FloatingActionButton) findViewById(R.id.editor_button_plus);
-        mFABOrder = (FloatingActionButton) findViewById(R.id.editor_button_order);
-        mFABDelete = (FloatingActionButton) findViewById(R.id.editor_button_delete);
-        mFABTakePhoto = (FloatingActionButton) findViewById(R.id.editor_button_take_photo);
+        FloatingActionButton buttonMinus = findViewById(R.id.editor_button_minus);
+        FloatingActionButton buttonPlus = findViewById(R.id.editor_button_plus);
+        FloatingActionButton buttonOrder = findViewById(R.id.editor_button_order);
+        FloatingActionButton buttonDelete = findViewById(R.id.editor_button_delete);
+        FloatingActionButton buttonTakePhoto = findViewById(R.id.editor_button_take_photo);
 
         /* If the intent doesn't content a product content URI, then add a product,
          * else edit an existing product */
@@ -104,11 +96,11 @@ public class EditorActivity extends AppCompatActivity
             setTitle(getString(R.string.editor_title_add));
 
             // Hide non applicable action buttons
-            mFABMinus.setVisibility(View.INVISIBLE);
-            mFABPlus.setVisibility(View.INVISIBLE);
-            mFABOrder.setVisibility(View.INVISIBLE);
-            mFABDelete.setVisibility(View.INVISIBLE);
-            mFABTakePhoto.setVisibility(View.INVISIBLE);
+            buttonMinus.setVisibility(View.INVISIBLE);
+            buttonPlus.setVisibility(View.INVISIBLE);
+            buttonOrder.setVisibility(View.INVISIBLE);
+            buttonDelete.setVisibility(View.INVISIBLE);
+            buttonTakePhoto.setVisibility(View.INVISIBLE);
          }
          else {
             // Edit an existing product
@@ -119,62 +111,66 @@ public class EditorActivity extends AppCompatActivity
             // and display the current values in the editor
             getLoaderManager().initLoader(EXISTING_PRODUCT_LOADER, null, this);
 
-            // Set OnClickListener on action buttons to trigger corresponding action
-            mFABPlus.setOnClickListener(new View.OnClickListener() {
+            // Set OnClickListener on action buttons to trigger the corresponding actions
+            buttonPlus.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    mProductHasChanged = true;
+                    productHasChanged = true;
                     showIncreaseQuantityDialog();
                 }
             });
-            mFABMinus.setOnClickListener(new View.OnClickListener() {
+
+            buttonMinus.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    mProductHasChanged = true;
+                    productHasChanged = true;
                     showDecreaseQuantityDialog();
                 }
             });
-            mFABOrder.setOnClickListener(new View.OnClickListener() {
+
+            buttonOrder.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    mProductHasChanged = true;
+                    productHasChanged = true;
                     showOrderDialog();
                 }
             });
-            mFABDelete.setOnClickListener(new View.OnClickListener() {
+
+            buttonDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     showDeleteConfirmationDialog();
                 }
             });
-            mFABTakePhoto.setOnClickListener(new View.OnClickListener() {
+
+            buttonTakePhoto.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    mProductHasChanged = true;
+                    productHasChanged = true;
                     dispatchTakePictureIntent();
                 }
             });
         }
 
-        mImageView = (ImageView) findViewById(R.id.editor_picture);
-        mImageView.setVisibility(View.VISIBLE);
-        nameET = (EditText) findViewById(R.id.editor_name);
-        mQuantityET = (EditText) findViewById(R.id.editor_quantity);
-        mPriceET = (EditText) findViewById(R.id.editor_price);
+        imageView = findViewById(R.id.editor_picture);
+        imageView.setVisibility(View.VISIBLE);
+        nameET = findViewById(R.id.editor_name);
+        quantityET = findViewById(R.id.editor_quantity);
+        priceET = findViewById(R.id.editor_price);
 
-        // Take a picture if user clicks on mImageView
-        mImageView.setOnClickListener(new View.OnClickListener() {
+        // Take a picture if user clicks on imageView
+        imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mProductHasChanged = true;
+                productHasChanged = true;
                 dispatchTakePictureIntent();
             }
         });
 
-        // Setup OnTouchListners should the user touch and modify the input fields
-        nameET.setOnTouchListener(mOnTouchListener);
-        mQuantityET.setOnTouchListener(mOnTouchListener);
-        mPriceET.setOnTouchListener(mOnTouchListener);
+        // Setup OnTouchListeners should the user touch and modify the input fields
+        nameET.setOnTouchListener(onTouchListener);
+        quantityET.setOnTouchListener(onTouchListener);
+        priceET.setOnTouchListener(onTouchListener);
     }
 
     @Override
@@ -197,12 +193,12 @@ public class EditorActivity extends AppCompatActivity
                 /* If the product hasn't been modified, continue navigating up
                    parent activity.
                  */
-                if (!mProductHasChanged) {
+                if (!productHasChanged) {
                     NavUtils.navigateUpFromSameTask(this);
                     return true;
                 }
 
-                // Otherwise ask user to confitm discarding their changes on the product
+                // Otherwise ask user to confirm discarding their changes on the product
                 DialogInterface.OnClickListener discardButtonClickListener =
                         new DialogInterface.OnClickListener() {
                             @Override
@@ -226,7 +222,7 @@ public class EditorActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
         // If the product hasn't changed, continue with handling back button press
-        if (!mProductHasChanged) {
+        if (!productHasChanged) {
             super.onBackPressed();
             return;
         }
@@ -256,18 +252,18 @@ public class EditorActivity extends AppCompatActivity
         /* If the user hasn't touched nor modified fhe fields, there's nothing to save and
          * return true.
          */
-        if (!mProductHasChanged) {
+        if (!productHasChanged) {
             return true;
         }
 
         // Get the user inputs
         String nameString = nameET.getText().toString().trim();
-        String quantityString = mQuantityET.getText().toString().trim();
-        String priceString = mPriceET.getText().toString().trim();
+        String quantityString = quantityET.getText().toString().trim();
+        String priceString = priceET.getText().toString().trim();
 
-        /* if some of the field inputs are empty, show Toast warning message to the user
+        /* if some of the field inputs are empty, show a Toast warning message to the user
          * and return false */
-        if (mImageBitmap == null || nameString.isEmpty() || quantityString.isEmpty()
+        if (imageBitmap == null || nameString.isEmpty() || quantityString.isEmpty()
                 || priceString.isEmpty()) {
             Toast.makeText(this, getString(R.string.editor_warning_empty_fields), Toast.LENGTH_LONG).show();
             return false;
@@ -283,9 +279,9 @@ public class EditorActivity extends AppCompatActivity
         values.put(ProductEntry.COLUMN_PRODUCT_NAME, nameString);
         values.put(ProductEntry.COLUMN_PRODUCT_QUANTITY, quantity);
         values.put(ProductEntry.COLUMN_PRODUCT_PRICE, price);
-        if (mImageBitmap != null) {
+        if (imageBitmap != null) {
             values.put(ProductEntry.COLUMN_PRODUCT_IMAGE,
-                    Utils.bitmapToByteArray(mImageBitmap));
+                    Utils.bitmapToByteArray(imageBitmap));
         }
 
         if (currentProductUri == null) {
@@ -359,9 +355,7 @@ public class EditorActivity extends AppCompatActivity
     }
 
     /**
-     * Dialog asking the user for a number to imcrease the productQuantity by.
-     * If input is empty, number is taken as a 0.
-     *
+     * Dialog asking the user for a number to increase the product quantity by.
      */
     private void showIncreaseQuantityDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -376,9 +370,9 @@ public class EditorActivity extends AppCompatActivity
                     String text = input.getText().toString();
                     if (!text.isEmpty()) {
                         int inputQuantity = Utils.stringToInt(text);
-                        int quantity = Utils.stringToInt(mQuantityET.getText().toString());
+                        int quantity = Utils.stringToInt(quantityET.getText().toString());
                         quantity += inputQuantity;
-                        mQuantityET.setText(String.valueOf(quantity));
+                        quantityET.setText(String.valueOf(quantity));
                     }
                 }
             }
@@ -396,6 +390,10 @@ public class EditorActivity extends AppCompatActivity
         alertDialog.show();
     }
 
+
+   /**
+     * Dialog asking the user for a number to decrease the product quantity by.
+     */
    private void showDecreaseQuantityDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         final EditText input = new EditText(this);
@@ -409,10 +407,10 @@ public class EditorActivity extends AppCompatActivity
                     String text = input.getText().toString();
                     if (!text.isEmpty()) {
                         int inputQuantity = Utils.stringToInt(text);
-                        int quantity = Utils.stringToInt(mQuantityET.getText().toString());
+                        int quantity = Utils.stringToInt(quantityET.getText().toString());
                         if (inputQuantity <= quantity) {
                             quantity -= inputQuantity;
-                            mQuantityET.setText(String.valueOf(quantity));
+                            quantityET.setText(String.valueOf(quantity));
                         } else {
                             Toast.makeText(EditorActivity.this,
                                 EditorActivity.this.getString(R.string.editor_decrease_quantity_is_nok_msg,
@@ -435,6 +433,9 @@ public class EditorActivity extends AppCompatActivity
         alertDialog.show();
     }
 
+    /**
+     * Dialog asking the user to choose sms or email for ordering.
+     */
     private void showOrderDialog() {
         String[] choice = {"Sms", "Email"};
         AlertDialog.Builder builder = new  AlertDialog.Builder(this);
@@ -460,7 +461,7 @@ public class EditorActivity extends AppCompatActivity
     }
 
     /**
-     * To compose a sms for ordering the current product
+     * To compose a sms for ordering the current product.
      */
     private void smsOrderProduct() {
         String name = nameET.getText().toString().trim();
@@ -478,14 +479,14 @@ public class EditorActivity extends AppCompatActivity
                 .append(getString(R.string.product_quantity)).append(" ");
 
 
-        String quantity = mQuantityET.getText().toString().trim();
+        String quantity = quantityET.getText().toString().trim();
         if (!quantity.isEmpty()) {
             stringBuilder.append(quantity);
         }
 
         stringBuilder.append("\n").append(getString(R.string.product_price)).append(" ");
 
-        String price = mPriceET.getText().toString().trim();
+        String price = priceET.getText().toString().trim();
         if (!price.isEmpty()) {
             stringBuilder.append(price);
         }
@@ -501,6 +502,9 @@ public class EditorActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * To compose an email for ordering the current product.
+     */
     private void emailOrderProduct() {
         String name = nameET.getText().toString().trim();
 
@@ -517,14 +521,14 @@ public class EditorActivity extends AppCompatActivity
                 .append(getString(R.string.product_quantity)).append(" ");
 
 
-        String quantity = mQuantityET.getText().toString().trim();
+        String quantity = quantityET.getText().toString().trim();
         if (!quantity.isEmpty()) {
             stringBuilder.append(quantity);
         }
 
         stringBuilder.append("\n").append(getString(R.string.product_price)).append(" ");
 
-        String price = mPriceET.getText().toString().trim();
+        String price = priceET.getText().toString().trim();
         if (!price.isEmpty()) {
             stringBuilder.append(price);
         }
@@ -555,12 +559,12 @@ public class EditorActivity extends AppCompatActivity
 
         // This loader will execute the ContentProvider's query method on a background thread.
         return new CursorLoader(
-                this,                   // Context of parent activity
-                currentProductUri,    // Content URI of the relevent product
+                this,           // Context of parent activity
+                currentProductUri,      // Content URI of the relevant product
                 projection,             // The columns to be included in the resulting cursor
-                null,                   // No selection criteria
-                null,                   // No selection arguments
-                null                    // Default sort order
+                null,           // No selection criteria
+                null,        // No selection arguments
+                null            // Default sort order
         );
     }
 
@@ -587,19 +591,19 @@ public class EditorActivity extends AppCompatActivity
 
             // Update the fields
             nameET.setText(name);
-            mQuantityET.setText(String.valueOf(quantity));
-            mPriceET.setText(String.format("%.2f%n", price));
+            quantityET.setText(String.valueOf(quantity));
+            priceET.setText(String.format(Locale.US,"%.2f%n", price));
 
             /* If the existing product has a photo, display its photo.
              * If not, display a add photo camera productImage.
              */
             if (image != null && image.length != 0) {
-                mImageBitmap = Utils.byteArrayToBitmap(image);
-                mImageView.setImageBitmap(mImageBitmap);
+                imageBitmap = Utils.byteArrayToBitmap(image);
+                imageView.setImageBitmap(imageBitmap);
             } else {
                 Bitmap addPhotoBitmap = BitmapFactory.decodeResource(getResources(),
                         R.drawable.ic_add_a_photo_gray);
-                mImageView.setImageBitmap(addPhotoBitmap);
+                imageView.setImageBitmap(addPhotoBitmap);
             }
         }
     }
@@ -608,9 +612,9 @@ public class EditorActivity extends AppCompatActivity
     public void onLoaderReset(Loader loader) {
         // If the loader is invalidated, clear out all the data from the input fields.
         nameET.setText("");
-        mQuantityET.setText("");
-        mPriceET.setText("");
-        mImageView.setVisibility(View.INVISIBLE);
+        quantityET.setText("");
+        priceET.setText("");
+        imageView.setVisibility(View.INVISIBLE);
     }
 
     /**
@@ -624,19 +628,16 @@ public class EditorActivity extends AppCompatActivity
     }
 
     /**
-     * Gets a photo thumbnail
-     *
-     * @param requestCode
-     * @param resultCode
-     * @param data
+     * Gets a photo thumbnail.
      */
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
-            mImageBitmap = (Bitmap) extras.get("data");
-            mImageView.setImageBitmap(mImageBitmap);
+            if (extras != null) {
+                imageBitmap = (Bitmap) extras.get("data");
+                imageView.setImageBitmap(imageBitmap);
+            }
         }
     }
 }

@@ -69,7 +69,7 @@ public class ProductProvider extends ContentProvider {
         // Get redable database
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
-        // Cursor to holf the query result
+        // Cursor to hold the query result
         Cursor cursor;
 
         // Figure out if the URI matcher can match the URI to a specific code
@@ -85,6 +85,7 @@ public class ProductProvider extends ContentProvider {
                         null,
                         sortOrder);
                 break;
+
             case PRODUCT_ID:
                 // Extract out the ID from the URI. And query for the product with the
                 // corresponding ID.
@@ -98,6 +99,7 @@ public class ProductProvider extends ContentProvider {
                         null,
                         sortOrder);
                 break;
+
             default:
                 throw new IllegalArgumentException("Cannot query unknown URI " + uri);
         }
@@ -105,7 +107,9 @@ public class ProductProvider extends ContentProvider {
         // Set notification URI on the Cursor,
         // so we know what content URI the Cursor was created for.
         // If the data at this URI changes, then we know we need to update the Cursor.
-        cursor.setNotificationUri(getContext().getContentResolver(), uri);
+        if (getContext() != null) {
+            cursor.setNotificationUri(getContext().getContentResolver(), uri);
+        }
 
         return cursor;
     }
@@ -127,26 +131,26 @@ public class ProductProvider extends ContentProvider {
     }
 
     /**
-     * Insert a product into the database with the given content values. Return the new content URI
-     * for that specific row in the database.
+     * Insert a product into the database with the given content values.
+     * Return the new content URI for that specific row in the database.
      */
     private Uri insertProduct(Uri uri, ContentValues values) throws IllegalArgumentException {
         // Check that the productName is not null nor it's empty
         String name = values.getAsString(ProductEntry.COLUMN_PRODUCT_NAME);
         if (name == null || name.isEmpty()) {
-            throw new IllegalArgumentException("Product productName is invalid: " + name);
+            throw new IllegalArgumentException("Product name is invalid: " + name);
         }
 
         // Check that the productQuantity is valid
         Integer quantity = values.getAsInteger(ProductEntry.COLUMN_PRODUCT_QUANTITY);
         if (quantity == null || quantity < 0) {
-            throw new IllegalArgumentException("Product productQuantity is invalid: " + quantity);
+            throw new IllegalArgumentException("Product quantity is invalid: " + quantity);
         }
 
         // If the productPrice is provided, check that it's not null and greater than or equal to 0
         Double price = values.getAsDouble(ProductEntry.COLUMN_PRODUCT_PRICE);
         if (price == null || price < 0) {
-            throw new IllegalArgumentException("Product productPrice is invalid: " + price);
+            throw new IllegalArgumentException("Product price is invalid: " + price);
         }
 
         // Get writable database
@@ -161,7 +165,9 @@ public class ProductProvider extends ContentProvider {
         }
 
         // Notify all listeners that the data has changed for the product content URI
-        getContext().getContentResolver().notifyChange(uri, null);
+        if (getContext() != null) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
 
         // return the new URI with the ID appended to the end of it
         return ContentUris.withAppendedId(uri, id);
@@ -186,12 +192,14 @@ public class ProductProvider extends ContentProvider {
                 // Delete all rows that match the selection and selection args
                 rowsDeleted = database.delete(ProductEntry.TABLE_NAME, selection, selectionArgs);
                 break;
+
             case PRODUCT_ID:
                 // Delete a single row given by the ID in the URI
                 selection = ProductEntry._ID + "=?";
                 selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri)) };
                 rowsDeleted = database.delete(ProductEntry.TABLE_NAME, selection, selectionArgs);
                 break;
+
             default:
                 throw new IllegalArgumentException("Deletion is not supported for " + uri);
         }
@@ -200,7 +208,9 @@ public class ProductProvider extends ContentProvider {
         // has changed
         if (rowsDeleted != 0) {
             // Notify all listeners that the data has changed for the product content URI
-            getContext().getContentResolver().notifyChange(uri, null);
+            if (getContext() != null) {
+                getContext().getContentResolver().notifyChange(uri, null);
+            }
         }
 
         // Return the number of rows deleted.
@@ -219,6 +229,7 @@ public class ProductProvider extends ContentProvider {
         switch (match) {
             case PRODUCTS:
                 return updateProduct(uri, contentValues, selection, selectionArgs);
+
             case PRODUCT_ID:
                 // For the PRODUCT_ID code, extract out the ID from the URI,
                 // so we know which row to update. Selection will be "_id=?" and
@@ -226,6 +237,7 @@ public class ProductProvider extends ContentProvider {
                 selection = ProductEntry._ID + "=?";
                 selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri)) };
                 return updateProduct(uri, contentValues, selection, selectionArgs);
+
             default:
                 throw new IllegalArgumentException("Update is not supported for " + uri);
         }
@@ -248,7 +260,7 @@ public class ProductProvider extends ContentProvider {
         if (values.containsKey(ProductEntry.COLUMN_PRODUCT_NAME)) {
             String name = values.getAsString(ProductEntry.COLUMN_PRODUCT_NAME);
             if (name == null) {
-                throw new IllegalArgumentException("Product productName is invalid: " + name);
+                throw new IllegalArgumentException("Product name is invalid: " + name);
             }
         }
 
@@ -256,7 +268,7 @@ public class ProductProvider extends ContentProvider {
         if (values.containsKey(ProductEntry.COLUMN_PRODUCT_QUANTITY)) {
             Integer quantity = values.getAsInteger(ProductEntry.COLUMN_PRODUCT_QUANTITY);
             if (quantity == null || quantity < 0) {
-                throw new IllegalArgumentException("Product productQuantity is invalid: " + quantity);
+                throw new IllegalArgumentException("Product quantity is invalid: " + quantity);
             }
         }
 
@@ -264,7 +276,7 @@ public class ProductProvider extends ContentProvider {
         if (values.containsKey(ProductEntry.COLUMN_PRODUCT_PRICE)) {
             Double price = values.getAsDouble(ProductEntry.COLUMN_PRODUCT_PRICE);
             if (price == null || price < 0) {
-                throw new IllegalArgumentException("Product productPrice is invalid: " + price);
+                throw new IllegalArgumentException("Product price is invalid: " + price);
             }
         }
 
@@ -279,7 +291,9 @@ public class ProductProvider extends ContentProvider {
         // given URI has changed
         if (rowsUpdated != 0) {
             // Notify all listeners that the data has changed for the product content URI
-            getContext().getContentResolver().notifyChange(uri, null);
+            if (getContext() != null) {
+                getContext().getContentResolver().notifyChange(uri, null);
+            }
         }
 
         // Return the number of rows updated
