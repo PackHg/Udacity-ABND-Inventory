@@ -35,7 +35,7 @@ import static com.oz_heng.apps.android.inventory.helper.Utils.deleteAllProducts;
   Done: Handle RecyclerView empty view.
   Done: Option to delete all the products in the database.
   DONE: Fits weill picture in the ImageView.
-  TODO: Don't Catch Generic Exception ??
+  Discarded: Don't Catch Generic Exception ??
   Done: Complete CatalogActivity
  */
 

@@ -38,7 +38,7 @@ import static com.oz_heng.apps.android.inventory.helper.Utils.updateProduct;
  * pack@oz-heng.com
  */
 
-/* TODO: Is EditorActivity completed?
+/* Done: Is EditorActivity completed?
 *  Done: Add case to add a new product (when user clicks on + button in CatalogActivity
 *  Done: Validate the data from the user input fields
 *  Done: Option to the delete the current product
@@ -50,7 +50,7 @@ import static com.oz_heng.apps.android.inventory.helper.Utils.updateProduct;
 *  Done: Fit well picture in ImageView
 *  Discarded: Force EditorActivity UI to be with Portrait mode only
 *  Done: if a FAB changes a product data, set mProducthasChanged to true
-*  TODO: Landscape layout for Editor.
+*  Discarded: Landscape layout for Editor.
 * */
 
 public class EditorActivity extends AppCompatActivity
@@ -103,7 +103,6 @@ public class EditorActivity extends AppCompatActivity
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editor);
-
 
         Intent intent = getIntent();
         mCurrentProductUri = intent.getData();
@@ -663,5 +662,4 @@ public class EditorActivity extends AppCompatActivity
             mImageView.setImageBitmap(mImageBitmap);
         }
     }
-
 }
