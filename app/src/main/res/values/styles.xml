@@ -9,13 +9,13 @@
 
     <!-- Style for an EditText field in the editor -->
     <style name="EditorTextViewStyle">
-        <item name="android:textAppearance">?android:textAppearanceMedium</item>
+        <item name="android:textAppearance">?android:textAppearanceSmall</item>
         <item name="android:textColor">@color/colorAccent</item>
     </style>
 
     <!-- Style for an EditText field in the editor -->
     <style name="EditorFieldStyle">
-        <item name="android:textAppearance">?android:textAppearanceMedium</item>
+        <item name="android:textAppearance">?android:textAppearanceSmall</item>
         <item name="android:textColor">@color/editorFieldTextColor</item>
     </style>
 

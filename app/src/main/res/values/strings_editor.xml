@@ -9,7 +9,7 @@
     <string name="editor_take_picture">Take picture</string>
 
     <!-- Warning message asking the user to enter product information [CHAR LIMIT=NONE] -->
-    <string name="editor_warning_empty_fields">Please enter all the product information</string>
+    <string name="editor_warning_empty_fields">Please enter all the required information: photo, name, quantity and price.</string>
 
     <!-- Warning message: prodproductNamename is empty [CHAR LIMIT=NONE] -->
     <string name="editor_warning_empty_name_field">Please enter product name</string>

@@ -95,11 +95,9 @@ public class EditorActivity extends AppCompatActivity
     // Action buttons
     FloatingActionButton mFABMinus;
     FloatingActionButton mFABPlus;
-    FloatingActionButton mFABSale;
     FloatingActionButton mFABOrder;
     FloatingActionButton mFABDelete;
     FloatingActionButton mFABTakePhoto;
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -112,7 +110,6 @@ public class EditorActivity extends AppCompatActivity
 
         mFABMinus = (FloatingActionButton) findViewById(R.id.editor_button_minus);
         mFABPlus = (FloatingActionButton) findViewById(R.id.editor_button_plus);
-        mFABSale = (FloatingActionButton) findViewById(R.id.editor_button_sale);
         mFABOrder = (FloatingActionButton) findViewById(R.id.editor_button_order);
         mFABDelete = (FloatingActionButton) findViewById(R.id.editor_button_delete);
         mFABTakePhoto = (FloatingActionButton) findViewById(R.id.editor_button_take_photo);
@@ -127,7 +124,6 @@ public class EditorActivity extends AppCompatActivity
             // Hide non applicable action buttons
             mFABMinus.setVisibility(View.INVISIBLE);
             mFABPlus.setVisibility(View.INVISIBLE);
-            mFABSale.setVisibility(View.INVISIBLE);
             mFABOrder.setVisibility(View.INVISIBLE);
             mFABDelete.setVisibility(View.INVISIBLE);
             mFABTakePhoto.setVisibility(View.INVISIBLE);
@@ -154,13 +150,6 @@ public class EditorActivity extends AppCompatActivity
                 public void onClick(View view) {
                     mProductHasChanged = true;
                     showDecreaseQuantityDialog();
-                }
-            });
-            mFABSale.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    mProductHasChanged = true;
-                    sale();
                 }
             });
             mFABOrder.setOnClickListener(new View.OnClickListener() {
@@ -574,31 +563,6 @@ public class EditorActivity extends AppCompatActivity
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
         }
-    }
-
-    /**
-     * Decreases the current product's productQuantity by one if its productQuantity
-     * is > 0
-     */
-    private void sale() {
-        String quantityET = mQuantityET.getText().toString();
-        int quantity;
-
-        if (quantityET.isEmpty()) {
-            quantity = 0;
-        } else {
-            quantity = Utils.stringToInt(quantityET);
-        }
-
-        if (quantity <= 0) {
-            Toast.makeText(this, getString(R.string.product_not_in_stock),
-                    Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        quantity--;
-        mQuantityET.setText(String.valueOf(quantity));
-        Toast.makeText(this, getString(R.string.editor_one_sold), Toast.LENGTH_SHORT).show();
     }
 
     @Override
