@@ -5,5 +5,5 @@
     <string name="catalog_empty_view_text">The catalog is empty.\n Click + button to add a new product</string>
 
     <!-- Content description of the Sales FAB [CHAR LIMIT=50] -->
-    <string name="catalog_fab_list_item_sales">Sales button</string>
+    <string name="catalog_fab_list_item_sales">Sale button</string>
 </resources>

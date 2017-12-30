@@ -1,6 +1,7 @@
 package com.oz_heng.apps.android.inventory.product;
 
 import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -24,6 +25,7 @@ import com.oz_heng.apps.android.inventory.product.ProductContract.ProductEntry;
 import java.util.Locale;
 
 import static android.view.View.NO_ID;
+import static com.oz_heng.apps.android.inventory.helper.Utils.updateProduct;
 
 
 /**
@@ -54,8 +56,21 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
                 public void onClick(View view) {
                     int position = getAdapterPosition();
                     long id = ProductAdapter.this.getItemId(position);
-                    Toast.makeText(context, "Sales button is clicked on item " + id,
-                            Toast.LENGTH_SHORT).show();
+                    int quantityCI = cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_QUANTITY);
+                    int quantity = cursor.getInt(quantityCI);
+
+                    if (quantity > 0) {
+                        quantity--;
+
+                        // Update the product quanity in the database.
+                        Uri productUri = ContentUris.withAppendedId(ProductEntry.CONTENT_URI, id);
+                        ContentValues values = new ContentValues();
+                        values.put(ProductEntry.COLUMN_PRODUCT_QUANTITY, quantity);
+                        updateProduct(context, productUri, values);
+                    } else {
+                        Toast.makeText(context, context.getString(R.string.product_not_in_stock),
+                                Toast.LENGTH_LONG).show();
+                    }
                 }
             });
 

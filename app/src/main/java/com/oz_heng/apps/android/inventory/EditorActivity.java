@@ -591,8 +591,8 @@ public class EditorActivity extends AppCompatActivity
         }
 
         if (quantity <= 0) {
-            Toast.makeText(this, getString(R.string.editor_warning_product_not_in_stock),
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.product_not_in_stock),
+                    Toast.LENGTH_LONG).show();
             return;
         }
 

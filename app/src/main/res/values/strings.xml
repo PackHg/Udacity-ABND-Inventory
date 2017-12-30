@@ -22,6 +22,9 @@
     <!-- Content description of the product ImageView [CHAR LIMIT=50] -->
     <string name="product_photo">Product photo</string>
 
+    <!-- For a warning message: the product isn't in stock [CHAR LIMIT=NONE] -->
+    <string name="product_not_in_stock">The product isn\'t in stock</string>
+
     <!-- For a message indicating the product has been saved with the Id in the database [CHAR LIMIT=NONE] -->
     <string name="save_product_successful_with_id">Product saved with Id:&#160;</string>
     <!-- For a message indicating the product has been unsuccessfully saved in the database [CHAR LIMIT=NONE] -->

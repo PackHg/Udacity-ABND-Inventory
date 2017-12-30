@@ -41,9 +41,6 @@
     <!-- Message alerting the user that his input number is incorrect for decreasing the product quantity [CHAR LIMIT=NONE] -->
     <string name="editor_decrease_quantity_is_nok_msg">Your input number must be less than or equal to the current quantity of %1$d.</string>
 
-    <!-- Warning message: product isn't in stock [CHAR LIMIT=NONE] -->
-    <string name="editor_warning_product_not_in_stock">The product isn\'t in stock</string>
-
    <!-- Confirmation message: one product has been sold [CHAR LIMIT=NONE] -->
     <string name="editor_one_sold">One has been sold</string>
 
