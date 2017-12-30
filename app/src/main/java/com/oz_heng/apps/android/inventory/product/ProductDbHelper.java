@@ -21,8 +21,6 @@ public class ProductDbHelper extends SQLiteOpenHelper {
 
     /** String constants for SQL keywords */
     private static final String CREATE_TABLE = "CREATE TABLE ";
-    private static final String DROP_TABLE = "DROP TABLE";
-    private static final String IF_EXISTS = " IF EXISTS ";
     private static final String TEXT = " TEXT";
     private static final String INTEGER = " INTEGER";
     private static final String REAL = " REAL";

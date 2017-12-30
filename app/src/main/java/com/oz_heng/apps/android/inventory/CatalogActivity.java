@@ -1,7 +1,6 @@
 package com.oz_heng.apps.android.inventory;
 
 import android.app.LoaderManager;
-import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
@@ -10,7 +9,6 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
@@ -22,13 +20,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.oz_heng.apps.android.inventory.helper.Utils;
 import com.oz_heng.apps.android.inventory.product.ProductAdapter;
 import com.oz_heng.apps.android.inventory.product.ProductContract.ProductEntry;
 
 import static com.oz_heng.apps.android.inventory.helper.Utils.deleteAllProducts;
+import static com.oz_heng.apps.android.inventory.helper.Utils.insertProduct;
 
 /**
  * Activity listing products that have been saved in the database.
@@ -172,13 +170,6 @@ public class CatalogActivity extends AppCompatActivity
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
         values.put(ProductEntry.COLUMN_PRODUCT_IMAGE, Utils.bitmapToByteArray(bitmap));
 
-        Uri uri = getContentResolver().insert(ProductEntry.CONTENT_URI, values);
-        long id = ContentUris.parseId(uri);
-
-        if (uri != null) {
-            Toast.makeText(this, getString(R.string.save_product_successful_with_id) + id, Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, getString(R.string.save_product_failed), Toast.LENGTH_SHORT).show();
-        }
+        insertProduct(this, ProductEntry.CONTENT_URI, values);
     }
 }
