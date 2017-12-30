@@ -6,22 +6,15 @@
     <string name="editor_product_name">Product name</string>
     <string name="editor_quantity_available">Quantity available</string>
     <string name="editor_product_price">Product price</string>
-    <string name="editor_take_picture">Take picture</string>
 
     <!-- Warning message asking the user to enter product information [CHAR LIMIT=NONE] -->
     <string name="editor_warning_empty_fields">Please enter all the required information: photo, name, quantity and price.</string>
 
-    <!-- Warning message: prodproductNamename is empty [CHAR LIMIT=NONE] -->
+    <!-- Warning message: product name is empty [CHAR LIMIT=NONE] -->
     <string name="editor_warning_empty_name_field">Please enter product name</string>
 
     <!-- Labels for editor menu option items [CHAR LIMIT=20] -->
     <string name="editor_menu_save">Save</string>
-    <string name="editor_menu_take_photo">Take photo</string>
-    <string name="editor_menu_plus_one">+ 1 (quantity)</string>
-    <string name="editor_menu_minus_one">- 1 (quantity)</string>
-    <string name="editor_menu_sell">Sell</string>
-    <string name="editor_menu_order">Order</string>
-    <string name="editor_menu_delete">Delete</string>
 
     <!-- Dialog message asking the user to confirm deleting the current product [CHAR LIMIT=NONE] -->
     <string name="editor_delete_dialog_msg">Delete this product?</string>
@@ -42,7 +35,6 @@
     <string name="editor_decrease_quantity_is_nok_msg">Your input number must be less than or equal to the current quantity of %1$d.</string>
 
    <!-- Confirmation message: one product has been sold [CHAR LIMIT=NONE] -->
-    <string name="editor_one_sold">One has been sold</string>
 
     <!-- Introduction test for order a product by sms or email [CHAR LIMIT=NONE] -->
     <string name="editor_order_intro_text">Please supply the following product.</string>
@@ -52,7 +44,6 @@
 
     <!-- Content description of the FAB's [CHAR LIMIT=50] -->
     <string name="editor_fab_minus">Button for decreasing the current quantity</string>
-    <string name="editor_fab_plus">Button for increasing the current quantity</string>
     <string name="editor_fab_order">Order button</string>
     <string name="editor_fab_delete">Delete button</string>
     <string name="editor_fab_take_photo">Take photo button</string>

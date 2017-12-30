@@ -43,10 +43,6 @@ public class ProductDbHelper extends SQLiteOpenHelper {
                     ProductEntry.COLUMN_PRODUCT_PRICE + REAL + NOT_NULL + DEFAULT + "0" + COMMA_SEP +
                     ProductEntry.COLUMN_PRODUCT_IMAGE + BLOB + DEFAULT + NULL + ");";
 
-    /** String constant for the SQL statement to delete the products table */
-    private static final String SQL_DELETE_ENTRIES = DROP_TABLE + IF_EXISTS + ProductEntry.TABLE_NAME;
-
-
     /**
      * Constructs a new instance of {@link ProductDbHelper}.
      *

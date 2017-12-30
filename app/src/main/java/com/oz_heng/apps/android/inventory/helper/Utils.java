@@ -115,7 +115,7 @@ public final class Utils {
                     productUri,         // Content URI of the current product to update
                     values,             // Values to update
                     null,         // No selection
-                    null     // No selection agrs
+                    null     // No selection args
             );
         } catch (IllegalArgumentException e) {
             Log.e(LOG_TAG, "updateProduct(): error with updating the product.", e);

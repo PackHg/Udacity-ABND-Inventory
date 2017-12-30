@@ -66,7 +66,7 @@ public class ProductProvider extends ContentProvider {
     public Cursor query(@NonNull Uri uri, @Nullable String[] projection,
                         @Nullable String selection, @Nullable String[] selectionArgs,
                         @Nullable String sortOrder) {
-        // Get redable database
+        // Get readable database
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
         // Cursor to hold the query result
