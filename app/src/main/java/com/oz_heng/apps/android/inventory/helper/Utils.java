@@ -20,6 +20,9 @@ import java.io.ByteArrayOutputStream;
 public final class Utils {
     private static final String LOG_TAG = Utils.class.getSimpleName();
 
+    /**
+     * Private constructor preventing this class being instantiated.
+     */
     private Utils() {}
 
     /**
